@@ -10,33 +10,43 @@
       "tests": [
         {
           "datasource": "NYC Taxi",
-          "query": "SELECT AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count = 9",
+          "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 7",
           "timeout": 20,
-          "expects": [[144.5, 457.796]]
+          "expects": [[82, 363.488, 583.733]],
+          "real_result": [[102, 434.284, 571.950]],
+          "users": 53
         },
         {
           "datasource": "NYC Taxi",
           "query": "SELECT passenger_count AS pc, COUNT(*) FROM trips WHERE passenger_count IN (7,8,9,10) GROUP BY pc ORDER BY pc",
           "timeout": 20,
-          "expects": [[7, 26], [8, 19], [9, 16]]
+          "expects": [[7, 26], [8, 19], [9, 16]],
+          "real_result": [[7, 35], [8, 25], [9, 26]],
+          "users": 46
         },
         {
           "datasource": "NYC Taxi",
           "query": "SELECT COUNT(DISTINCT passenger_count) FROM trips WHERE trip_time_in_secs > 5000",
-          "timeout": 250,
-          "expects": [[8]]
+          "timeout": 300,
+          "expects": [[8]],
+          "real_result": [[7]],
+          "users": 12798
         },
         {
           "datasource": "NYC Taxi",
           "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 AND passenger_count <> 4",
           "timeout": 600,
-          "expects": [[2729316]]
+          "expects": [[2729316]],
+          "real_result": [[2729328]],
+          "users": 13562
         },
         {
           "datasource": "NYC Taxi",
           "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs < 60",
           "timeout": 500,
-          "expects": [[0, 9, 1, 1465618]]
+          "expects": [[0, 9, 1, 1465618]],
+          "real_result": [[0, 208, 1, 14709009]],
+          "users": 14056
         }
       ]
     }
