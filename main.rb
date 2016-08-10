@@ -44,7 +44,7 @@ def run_test(url, cloak_id, api_token, test)
   if result != test["expects"] then raise "Expected: #{test["expects"]}, got: #{result}" end
 rescue => error
   store_error(url, test, error)
-  puts "\nQuery execution failed: #{error}."
+  puts " failed: #{error}."
   puts "Backtrace:\n\t#{error.backtrace.join("\n\t")}"
 end
 
@@ -110,7 +110,7 @@ def execute_query(url, api_token, datasource_token, statement, timeout)
   if !query["success"] then raise "Failed to start query" end
   query_id = query["query_id"]
 
-  poll_interval = [(timeout / 100).round, 4].min
+  poll_interval = [(timeout / 100).round(), 2].max()
   progress = duration = 0
   begin
     sleep poll_interval
@@ -119,9 +119,10 @@ def execute_query(url, api_token, datasource_token, statement, timeout)
     query = get_query(url, api_token, query_id) # get current state
     duration = (Time.now - start_time).round()
   end until query["completed"] or duration > timeout
-  puts " completed in #{duration} seconds."
+
   if duration > timeout then raise "Query timeout" end
   if query["error"] then raise query["error"] end
+  puts " completed in #{duration} seconds."
 
   query["rows"].map { |row|
     row["row"].map { |value|
