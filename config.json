@@ -1,0 +1,44 @@
+{
+  "email_to": "everyone-dev@aircloak.com",
+  "email_server": "localhost",
+  "email_port": 25,
+  "cloaks": [
+    {
+      "url": "https://insights-stage.aircloak.com",
+      "token": "g3QAAAACZAAEZGF0YW0AAAAkNGMzOTMxZDEtMDQ1NC00YTBmLWExNmQtZWVjOGVjZWJhOWFiZAAGc2lnbmVkbgYAQszoblYB##rxjwwoPALXGaDlGS9IkpITzhSKk=",
+      "name": "master_stage@srv-76-133",
+      "tests": [
+        {
+          "datasource": "NYC Taxi",
+          "query": "SELECT AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count = 9",
+          "timeout": 20,
+          "expects": [[144.5, 457.796]]
+        },
+        {
+          "datasource": "NYC Taxi",
+          "query": "SELECT passenger_count AS pc, COUNT(*) FROM trips WHERE passenger_count IN (7,8,9,10) GROUP BY pc ORDER BY pc",
+          "timeout": 20,
+          "expects": [[7, 26], [8, 19], [9, 16]]
+        },
+        {
+          "datasource": "NYC Taxi",
+          "query": "SELECT COUNT(DISTINCT passenger_count) FROM trips WHERE trip_time_in_secs > 5000",
+          "timeout": 250,
+          "expects": [[8]]
+        },
+        {
+          "datasource": "NYC Taxi",
+          "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 AND passenger_count <> 4",
+          "timeout": 600,
+          "expects": [[2729316]]
+        },
+        {
+          "datasource": "NYC Taxi",
+          "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs < 60",
+          "timeout": 500,
+          "expects": [[0, 9, 1, 1465618]]
+        }
+      ]
+    }
+  ]
+}
