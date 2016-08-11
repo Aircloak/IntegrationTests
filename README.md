@@ -1,4 +1,4 @@
-### Aircloak integration tests
+## Aircloak integration tests
 
 This repository contains a very simple test harness which verifies that our infrastructure is functioning properly.
 

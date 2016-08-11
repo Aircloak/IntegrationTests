@@ -11,11 +11,9 @@ $errors = []
 def store_error(url, test, error)
   cell_style = 'style="border: 1px solid lightgrey"'
   message = <<ENDOFMESSAGE
-<table style="border-collapse: collapse;" cellpadding="4">
-  <tr><td #{cell_style}>error</td><td #{cell_style}>#{error}</td></tr>
-  <tr><td #{cell_style}>target</td><td #{cell_style}>#{test["datasource"]} @ #{url}</td></tr>
-  <tr><td #{cell_style}>query</td><td #{cell_style}>#{test["query"]}</td></tr>
-</table>
+  <tr><td #{cell_style}>Error</td><td #{cell_style}>#{error}</td></tr>
+  <tr><td #{cell_style}>Target</td><td #{cell_style}>#{test["datasource"]} @ #{url}</td></tr>
+  <tr><td #{cell_style}>Query</td><td #{cell_style}>#{test["query"]}</td></tr>
 ENDOFMESSAGE
   $errors.push(message)
 end
@@ -28,7 +26,11 @@ MIME-Version: 1.0
 Content-type: text/html
 Subject: Integration tests failed :(
 
-#{$errors.join("<br/>")}
+<table style="border-collapse: collapse;" cellpadding="4" width="100%">
+#{$errors.join("<tr><td colspan='2'>&nbsp;</td></tr>")}
+</table>
+<br/><hr/>
+https://github.com/Aircloak/IntegrationTests/blob/master/README.md
 ENDOFMESSAGE
 end
 
@@ -120,7 +122,7 @@ def execute_query(url, api_token, datasource_token, statement, timeout)
     duration = (Time.now - start_time).round()
   end until query["completed"] or duration > timeout
 
-  if duration > timeout then raise "Query timeout" end
+  if duration > timeout then raise "Query timeout (exceeded #{timeout} seconds)" end
   if query["error"] then raise query["error"] end
   puts " completed in #{duration} seconds."
 

@@ -27,7 +27,7 @@
         {
           "datasource": "NYC Taxi",
           "query": "SELECT COUNT(DISTINCT passenger_count) FROM trips WHERE trip_time_in_secs > 5000",
-          "timeout": 300,
+          "timeout": 350,
           "expects": [[8]],
           "real_result": [[7]],
           "users": 12798
@@ -35,7 +35,7 @@
         {
           "datasource": "NYC Taxi",
           "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 AND passenger_count <> 4",
-          "timeout": 600,
+          "timeout": 650,
           "expects": [[2729316]],
           "real_result": [[2729328]],
           "users": 13562
