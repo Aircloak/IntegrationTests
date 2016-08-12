@@ -1,6 +1,8 @@
 #!/bin/bash
 
 cd "$(dirname "$0")"
+
 export http_proxy=""
-./main.rb 2>&1 | tee -a "./logs/`date +%F.log`"
-./perf.rb
+LOG="./logs/`date +%F.log`"
+./main.rb 2>&1 | tee -a "$LOG"
+./perf.rb 2>&1 | tee -a "$LOG"
