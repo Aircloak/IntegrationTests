@@ -43,7 +43,7 @@
         {
           "datasource": "NYC Taxi",
           "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs < 60",
-          "timeout": 500,
+          "timeout": 550,
           "expects": [[0, 9, 1, 1465618]],
           "real_result": [[0, 208, 1, 14709009]],
           "users": 14056
@@ -91,7 +91,7 @@
         {
           "datasource": "NYC Taxi",
           "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs < 60",
-          "timeout": 500,
+          "timeout": 550,
           "expects": [[0, 9, 1, 1465618]],
           "real_result": [[0, 208, 1, 14709009]],
           "users": 14056
