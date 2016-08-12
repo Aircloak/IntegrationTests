@@ -10,11 +10,11 @@ require 'date'
 
 $errors = []
 
-def store_error(url, test, error)
+def store_error(url, cloak_id, test, error)
   cell_style = 'style="border: 1px solid lightgrey"'
   message = <<ENDOFMESSAGE
   <tr><td #{cell_style}>Error</td><td #{cell_style}>#{error}</td></tr>
-  <tr><td #{cell_style}>Dataset</td><td #{cell_style}>#{test["datasource"]} @ #{url}</td></tr>
+  <tr><td #{cell_style}>Target</td><td #{cell_style}>#{cloak_id} / #{test["datasource"]} [#{url}]</td></tr>
   <tr><td #{cell_style}>Query</td><td #{cell_style}>#{test["query"]}</td></tr>
 ENDOFMESSAGE
   $errors.push(message)
@@ -44,12 +44,12 @@ end
 def run_test(url, cloak_id, api_token, test)
   # Note: This log line is used by the perf.rb script to extract timing information.
   # If you modify it, you must update the parsing code in that file also.
-  print "Executing query '#{test["query"]}' on dataset '#{test["datasource"]}' "
+  print "Executing query '#{test["query"]}' on '#{cloak_id}/#{test["datasource"]}' "
   datasource_token = get_datasource_token(url, cloak_id, api_token, test["datasource"])
   result = execute_query(url, api_token, datasource_token, test["query"], test["timeout"])
   if result != test["expects"] then raise "Expected: #{test["expects"]}, got: #{result}" end
 rescue => error
-  store_error(url, test, error)
+  store_error(url, cloak_id, test, error)
   puts " failed: #{error}."
   puts "Backtrace:\n\t#{error.backtrace.join("\n\t")}"
 end
@@ -124,7 +124,7 @@ def execute_query(url, api_token, datasource_token, statement, timeout)
     duration = (Time.now - start_time).round()
   end until query["completed"] or duration > timeout
 
-  if duration > timeout then raise "Query timeout (exceeded #{timeout} seconds)" end
+  if duration > timeout then raise "Query timeout (duration exceeded #{timeout} seconds)" end
   if query["error"] then raise query["error"] end
   # Note: This log line is used by the perf.rb script to extract timing information.
   # If you modify it, you must update the parsing code in that file also.
@@ -152,7 +152,9 @@ puts "Integration tests started at #{time}, using settings from '#{config_file}'
 file = File.read(config_file)
 config = JSON.parse(file)
 
-config["cloaks"].each do |cloak| test_cloak(cloak["url"], cloak["name"], cloak["token"], cloak["tests"]) end
+config["cloaks"].each do |cloak|
+  test_cloak(cloak["url"], cloak["name"], cloak["token"], cloak["tests"])
+end
 
 if not $errors.empty? then
   message = format_mail(config["email_to"])

@@ -10,11 +10,11 @@ require 'date'
 
 $warnings = []
 
-def store_warning(test, warning)
+def store_warning(cloak_id, test, warning)
   cell_style = 'style="border: 1px solid lightgrey"'
   message = <<ENDOFMESSAGE
   <tr><td #{cell_style}>Warning</td><td #{cell_style}>#{warning}</td></tr>
-  <tr><td #{cell_style}>Dataset</td><td #{cell_style}>#{test["datasource"]}</td></tr>
+  <tr><td #{cell_style}>Target</td><td #{cell_style}>#{cloak_id} / #{test["datasource"]}</td></tr>
   <tr><td #{cell_style}>Query</td><td #{cell_style}>#{test["query"]}</td></tr>
 ENDOFMESSAGE
   $warnings.push(message)
@@ -38,8 +38,9 @@ end
 
 def array_avg(arr) (arr.reduce(:+).to_f() / arr.count).round() end
 
-def check_test(logs, test)
-  pattern = /^.+'#{Regexp.quote(test["query"])}'.+'#{Regexp.quote(test["datasource"])}' \.+ completed in ([\d]+) seconds.$/
+def check_test(logs, cloak_id, test)
+  target = "#{cloak_id}/#{test["datasource"]}"
+  pattern = /^.+'#{Regexp.quote(test["query"])}'.+'#{Regexp.quote(target)}' \.+ completed in ([\d]+) seconds.$/
   durations = logs.map do |log| # extract test duration from logs
     if pattern =~ log then $1.to_i() else nil end
   end
@@ -55,7 +56,8 @@ def check_test(logs, test)
   rel_diff = 100 * last_avg / prev_avg - 100
   if rel_diff >= 5 then # notify if the average duration increased by more than 5%
     abs_diff = last_avg - prev_avg
-    store_warning(test, "Query duration increased from #{prev_avg} seconds to #{last_avg} seconds (#{abs_diff} seconds or #{rel_diff}% more)")
+    store_warning(cloak_id, test, "Query duration increased " \
+      "from #{prev_avg} seconds to #{last_avg} seconds (#{abs_diff} seconds or #{rel_diff}% more)")
   end
 end
 
@@ -79,7 +81,7 @@ logs = logs.map do |log| File.new(log).read end
 
 config["cloaks"].each do |cloak|
   cloak["tests"].each do |test|
-    check_test(logs, test)
+    check_test(logs, cloak["name"], test)
   end
 end
 
