@@ -17,5 +17,9 @@ If errors are encountered, a notification email is sent to the address specified
 
 You can also run the tests manually at any time by executing the `run.sh` script.
 
+There are 2 types of tests being executed:
+  - [main.rb](main.rb) - Main tests that verify if our infrastructure is working normally.
+  - [perf.rb](perf.rb) - Performance regression tests that warn when the duration for a query increases.
+
 __NOTE__: Because of the way queries are executed (polling is used to wait for a query to complete),
 timing information is accurate only within 1% of the test timeout value or 2 seconds, whichever is greater.
