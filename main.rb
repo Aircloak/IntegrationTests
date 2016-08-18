@@ -45,8 +45,8 @@ def run_test(url, cloak_id, api_token, test)
   # Note: This log line is used by the perf.rb script to extract timing information.
   # If you modify it, you must update the parsing code in that file also.
   print "Executing query '#{test["query"]}' on '#{cloak_id}/#{test["datasource"]}' "
-  datasource_token = get_datasource_token(url, cloak_id, api_token, test["datasource"])
-  result = execute_query(url, api_token, datasource_token, test["query"], test["timeout"])
+  datasource_id = "#{test["datasource"]}@#{cloak_id}"
+  result = execute_query(url, api_token, datasource_id, test["query"], test["timeout"])
   if result != test["expects"] then raise "Expected: #{test["expects"]}, got: #{result}" end
 rescue => error
   store_error(url, cloak_id, test, error)
@@ -54,29 +54,11 @@ rescue => error
   puts "Backtrace:\n\t#{error.backtrace.join("\n\t")}"
 end
 
-def get_datasource_token(url, cloak_id, api_token, datasource_id)
-  request = {
-    method: :get,
-    url: "#{url}/api/data_sources",
-    #verify_ssl: OpenSSL::SSL::VERIFY_NONE,
-    headers: {
-      'auth-token' => api_token
-    }
-  }
-  response = RestClient::Request.execute request
-  datasources = JSON.parse response.body
-  target_name = "#{datasource_id} (#{cloak_id})"
-  datasources.each do |datasource|
-    return datasource["token"] if datasource["display"] == target_name
-  end
-  raise "Datasource '#{datasource_id}' was not found at '#{url}'"
-end
-
-def start_query(url, api_token, datasource_token, statement)
+def start_query(url, api_token, datasource_id, statement)
   body = {
     query: {
       statement: statement,
-      data_source_token: datasource_token
+      data_source_id: datasource_id
     }
   }.to_json
   request = {
@@ -107,10 +89,10 @@ def get_query(url, api_token, query_id)
   query = query["query"]
 end
 
-def execute_query(url, api_token, datasource_token, statement, timeout)
+def execute_query(url, api_token, datasource_id, statement, timeout)
   start_time = Time.now
   print "."
-  query = start_query(url, api_token, datasource_token, statement)
+  query = start_query(url, api_token, datasource_id, statement)
   if !query["success"] then raise "Failed to start query" end
   query_id = query["query_id"]
 
@@ -132,7 +114,11 @@ def execute_query(url, api_token, datasource_token, statement, timeout)
 
   query["rows"].map do |row|
     row["row"].map do |value|
-      (value * 1000).round() / 1000.0 # keep 3 decimals at most (just like the UI)
+      if value.is_a?(Float) then
+        (value * 1000).round() / 1000.0 # keep 3 decimals at most (just like the UI)
+      else
+        value
+      end
     end
   end
 end

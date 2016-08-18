@@ -54,6 +54,7 @@ def check_test(logs, cloak_id, test)
   return if last_avg < 60 # skip if test took less than 1 minute
 
   rel_diff = 100 * last_avg / prev_avg - 100
+  puts "Duration for query '#{test["query"]}' on '#{target}' differs by #{rel_diff}%."
   if rel_diff >= 5 then # notify if the average duration increased by more than 5%
     abs_diff = last_avg - prev_avg
     store_warning(cloak_id, test, "Query duration increased " \
