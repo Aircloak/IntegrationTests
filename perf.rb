@@ -81,7 +81,8 @@ logs = Dir["logs/*.log"].sort().last(10).reverse()
 logs = logs.map do |log| File.new(log).read end
 
 config["cloaks"].each do |cloak|
-  cloak["tests"].each do |test|
+  tests = config["tests"][cloak["tests"]]
+  tests.each do |test|
     check_test(logs, cloak["name"], test)
   end
 end

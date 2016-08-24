@@ -139,7 +139,8 @@ file = File.read(config_file)
 config = JSON.parse(file)
 
 config["cloaks"].each do |cloak|
-  test_cloak(cloak["url"], cloak["name"], cloak["token"], cloak["tests"])
+  tests = config["tests"][cloak["tests"]]
+  test_cloak(cloak["url"], cloak["name"], cloak["token"], tests)
 end
 
 if not $errors.empty? then
