@@ -1,5 +1,6 @@
 {
   "email_to": "everyone-dev@aircloak.com",
+  "email_from": "everyone-dev@aircloak.com",
   "email_server": "localhost",
   "email_port": 25,
   "cloaks": [

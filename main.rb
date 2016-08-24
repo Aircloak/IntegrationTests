@@ -20,9 +20,9 @@ ENDOFMESSAGE
   $errors.push(message)
 end
 
-def format_mail(to)
+def format_mail(from, to)
   message = <<ENDOFMESSAGE
-From: <everyone-dev@aircloak.com>
+From: <#{from}>
 To: <#{to}>
 MIME-Version: 1.0
 Content-type: text/html
@@ -143,9 +143,9 @@ config["cloaks"].each do |cloak|
 end
 
 if not $errors.empty? then
-  message = format_mail(config["email_to"])
+  message = format_mail(config["email_from"], config["email_to"])
   Net::SMTP.start(config["email_server"], config["email_port"]) do |smtp|
-    smtp.send_message message, 'everyone-dev@aircloak.com', config["email_to"]
+    smtp.send_message message, config["email_from"], config["email_to"]
     puts "Notification email sent!"
   end
 end
