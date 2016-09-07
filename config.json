@@ -64,7 +64,7 @@
   "cloaks": [
     {
       "url": "https://insights-stage.aircloak.com",
-      "token": "g3QAAAACZAAEZGF0YW0AAAAkNGMzOTMxZDEtMDQ1NC00YTBmLWExNmQtZWVjOGVjZWJhOWFiZAAGc2lnbmVkbgYAQszoblYB##rxjwwoPALXGaDlGS9IkpITzhSKk=",
+      "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNzg0NWExMjktNTBjYS00ODA3LTgzN2UtYmYyYjAyNzBjNzJlZAAGc2lnbmVkbgYAaGokBVcB.wbJAqKP3jRVNUwUnxybIjgZ1Q2zbA2DIU-NKFO907_k",
       "name": "master_stage@srv-76-133",
       "tests": "generic"
     },
