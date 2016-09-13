@@ -64,7 +64,7 @@
     ],
     "production": [
       {
-        "datasource": "newcloak/newcloak-games-and-players@airdb.mpi-sws.orgg",
+        "datasource": "newcloak/newcloak-games-and-players@airdb.mpi-sws.org",
         "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
         "timeout": 30,
         "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]],
