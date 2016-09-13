@@ -10,11 +10,11 @@ require 'date'
 
 $warnings = []
 
-def store_warning(cloak_id, test, warning)
+def store_warning(url, test, warning)
   cell_style = 'style="border: 1px solid lightgrey"'
   message = <<ENDOFMESSAGE
   <tr><td #{cell_style}>Warning</td><td #{cell_style}>#{warning}</td></tr>
-  <tr><td #{cell_style}>Target</td><td #{cell_style}>#{cloak_id} / #{test["datasource"]}</td></tr>
+  <tr><td #{cell_style}>Target</td><td #{cell_style}>[#{url}]: #{test["datasource"]}</td></tr>
   <tr><td #{cell_style}>Query</td><td #{cell_style}>#{test["query"]}</td></tr>
 ENDOFMESSAGE
   $warnings.push(message)
@@ -38,8 +38,8 @@ end
 
 def array_avg(arr) (arr.reduce(:+).to_f() / arr.count).round() end
 
-def check_test(logs, cloak_id, test)
-  target = "#{cloak_id}/#{test["datasource"]}"
+def check_test(logs, url, test)
+  target = "#{test["datasource"]} [#{url}]"
   pattern = /^.+'#{Regexp.quote(test["query"])}'.+'#{Regexp.quote(target)}' \.+ completed in ([\d]+) seconds.$/
   durations = logs.map do |log| # extract test duration from logs
     if pattern =~ log then $1.to_i() else nil end
@@ -54,10 +54,10 @@ def check_test(logs, cloak_id, test)
   return if last_avg < 60 # skip if test took less than 1 minute
 
   rel_diff = 100 * last_avg / prev_avg - 100
-  puts "Duration for query '#{test["query"]}' on '#{target}' differs by #{rel_diff}%."
+  puts "Duration for query '#{test["query"]}' on '#{test["datasource"]}' differs by #{rel_diff}%."
   if rel_diff >= 5 then # notify if the average duration increased by more than 5%
     abs_diff = last_avg - prev_avg
-    store_warning(cloak_id, test, "Query duration increased " \
+    store_warning(url, test, "Query duration increased " \
       "from #{prev_avg} seconds to #{last_avg} seconds (#{abs_diff} seconds or #{rel_diff}% more)")
   end
 end
@@ -81,9 +81,11 @@ logs = Dir["logs/*.log"].sort().last(10).reverse()
 logs = logs.map do |log| File.new(log).read end
 
 config["cloaks"].each do |cloak|
-  tests = config["tests"][cloak["tests"]]
-  tests.each do |test|
-    check_test(logs, cloak["name"], test)
+  cloak["tests"].each do |tests_name|
+    tests = config["tests"][tests_name]
+    tests.each do |test|
+      check_test(logs, cloak["url"], test)
+    end
   end
 end
 

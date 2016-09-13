@@ -10,11 +10,11 @@ require 'date'
 
 $errors = []
 
-def store_error(url, cloak_id, test, error)
+def store_error(url, test, error)
   cell_style = 'style="border: 1px solid lightgrey"'
   message = <<ENDOFMESSAGE
   <tr><td #{cell_style}>Error</td><td #{cell_style}>#{error}</td></tr>
-  <tr><td #{cell_style}>Target</td><td #{cell_style}>#{cloak_id} / #{test["datasource"]} [#{url}]</td></tr>
+  <tr><td #{cell_style}>Target</td><td #{cell_style}>[#{url}]: #{test["datasource"]}</td></tr>
   <tr><td #{cell_style}>Query</td><td #{cell_style}>#{test["query"]}</td></tr>
 ENDOFMESSAGE
   $errors.push(message)
@@ -36,34 +36,33 @@ https://github.com/Aircloak/IntegrationTests/blob/master/README.md
 ENDOFMESSAGE
 end
 
-def test_cloak(url, cloak_id, api_token, tests)
-  puts "Running tests for cloak '#{cloak_id}' from '#{url}' ..."
-  tests.each do |test| run_test(url, cloak_id, api_token, test) end
+def test_cloak(url, api_token, tests)
+  puts "Running tests on '#{url}' ..."
+  tests.each do |test| run_test(url, api_token, test) end
 end
 
-def run_test(url, cloak_id, api_token, test)
+def run_test(url, api_token, test)
   # Note: This log line is used by the perf.rb script to extract timing information.
   # If you modify it, you must update the parsing code in that file also.
-  print "Executing query '#{test["query"]}' on '#{cloak_id}/#{test["datasource"]}' "
-  datasource_id = "#{test["datasource"]}@#{cloak_id}"
-  result = execute_query(url, api_token, datasource_id, test["query"], test["timeout"])
+  print "Executing query '#{test["query"]}' on '#{test["datasource"]} [#{url}]' "
+  result = execute_query(url, api_token, test["datasource"], test["query"], test["timeout"])
   if result != test["expects"] then raise "Expected: #{test["expects"]}, got: #{result}" end
 rescue => error
-  store_error(url, cloak_id, test, error)
+  store_error(url, test, error)
   puts " failed: #{error}."
   puts "Backtrace:\n\t#{error.backtrace.join("\n\t")}"
 end
 
-def start_query(url, api_token, datasource_id, statement)
+def start_query(url, api_token, datasource, statement)
   body = {
     query: {
       statement: statement,
-      data_source_id: datasource_id
+      data_source_token: datasource
     }
   }.to_json
   request = {
     method: :post,
-    url: "#{url}/api/queries",
+    url: "https://#{url}/api/queries",
     #verify_ssl: OpenSSL::SSL::VERIFY_NONE,
     headers: {
       'auth-token' => api_token,
@@ -78,7 +77,7 @@ end
 def get_query(url, api_token, query_id)
   request = {
     method: :get,
-    url: "#{url}/api/queries/#{query_id}",
+    url: "https://#{url}/api/queries/#{query_id}",
     #verify_ssl: OpenSSL::SSL::VERIFY_NONE,
     headers: {
       'auth-token' => api_token
@@ -89,10 +88,10 @@ def get_query(url, api_token, query_id)
   query = query["query"]
 end
 
-def execute_query(url, api_token, datasource_id, statement, timeout)
+def execute_query(url, api_token, datasource, statement, timeout)
   start_time = Time.now
   print "."
-  query = start_query(url, api_token, datasource_id, statement)
+  query = start_query(url, api_token, datasource, statement)
   if !query["success"] then raise "Failed to start query" end
   query_id = query["query_id"]
 
@@ -139,8 +138,10 @@ file = File.read(config_file)
 config = JSON.parse(file)
 
 config["cloaks"].each do |cloak|
-  tests = config["tests"][cloak["tests"]]
-  test_cloak(cloak["url"], cloak["name"], cloak["token"], tests)
+  cloak["tests"].each do |tests_name|
+    tests = config["tests"][tests_name]
+    test_cloak(cloak["url"], cloak["token"], tests)
+  end
 end
 
 if not $errors.empty? then

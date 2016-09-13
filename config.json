@@ -6,21 +6,7 @@
   "tests": {
     "generic": [
       {
-        "datasource": "Games and players",
-        "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
-        "timeout": 30,
-        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]],
-        "real_result": [[56, 7], [61, 9], [62, 8], [64, 7], ["*", 85]],
-        "users": [5, 6, 5, 5, 11]
-      },
-      {
-        "datasource": "dsproxy_med",
-        "query": "SELECT COUNT(status) FROM pt_mail",
-        "timeout": 30,
-        "expects": [[3577]]
-      },
-      {
-        "datasource": "NYC Taxi",
+        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
         "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 7",
         "timeout": 30,
         "expects": [[82, 363.488, 583.733]],
@@ -28,7 +14,7 @@
         "users": [53]
       },
       {
-        "datasource": "NYC Taxi",
+        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
         "query": "SELECT passenger_count AS pc, COUNT(*) FROM trips WHERE passenger_count IN (7,8,9,10) GROUP BY pc ORDER BY pc",
         "timeout": 30,
         "expects": [[7, 26], [8, 19], [9, 16]],
@@ -36,7 +22,7 @@
         "users": [46]
       },
       {
-        "datasource": "NYC Taxi",
+        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
         "query": "SELECT COUNT(DISTINCT passenger_count) FROM trips WHERE trip_time_in_secs > 5000",
         "timeout": 600,
         "expects": [[8]],
@@ -44,7 +30,7 @@
         "users": [12798]
       },
       {
-        "datasource": "NYC Taxi",
+        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
         "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 AND passenger_count <> 4",
         "timeout": 900,
         "expects": [[2729316]],
@@ -52,27 +38,57 @@
         "users": [13562]
       },
       {
-        "datasource": "NYC Taxi",
+        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
         "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs < 60",
         "timeout": 900,
         "expects": [[0, 9, 1, 1465618]],
         "real_result": [[0, 208, 1, 14709009]],
         "users": [14056]
       }
+    ],
+    "stage": [
+      {
+        "datasource": "newcloak/newcloak-games and players@airdb.mpi-sws.org",
+        "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
+        "timeout": 30,
+        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]],
+        "real_result": [[56, 7], [61, 9], [62, 8], [64, 7], ["*", 85]],
+        "users": [5, 6, 5, 5, 11]
+      },
+      {
+        "datasource": "dsproxy/med@stage_ds_proxy",
+        "query": "SELECT COUNT(status) FROM pt_mail",
+        "timeout": 30,
+        "expects": [[3577]]
+      }
+    ],
+    "production": [
+      {
+        "datasource": "newcloak/newcloak-games-and-players@airdb.mpi-sws.orgg",
+        "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
+        "timeout": 30,
+        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]],
+        "real_result": [[56, 7], [61, 9], [62, 8], [64, 7], ["*", 85]],
+        "users": [5, 6, 5, 5, 11]
+      },
+      {
+        "datasource": "med/med@dsproxy",
+        "query": "SELECT COUNT(status) FROM pt_mail",
+        "timeout": 30,
+        "expects": [[3577]]
+      }
     ]
   },
   "cloaks": [
     {
-      "url": "https://insights-stage.aircloak.com",
+      "url": "insights-stage.aircloak.com",
       "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNzg0NWExMjktNTBjYS00ODA3LTgzN2UtYmYyYjAyNzBjNzJlZAAGc2lnbmVkbgYAaGokBVcB.wbJAqKP3jRVNUwUnxybIjgZ1Q2zbA2DIU-NKFO907_k",
-      "name": "master_stage@srv-76-133",
-      "tests": "generic"
+      "tests": ["generic", "stage"]
     },
     {
-      "url": "https://insights.aircloak.com",
+      "url": "insights.aircloak.com",
       "token": "g3QAAAACZAAEZGF0YW0AAAAkMmUwYTVkMTgtNThlYy00ZjE0LTkwNjItOTBkZjZjYzRiMGE4ZAAGc2lnbmVkbgYApejcflYB##JW3qkvLENz4JnKY6HK1vo9DzcEA=",
-      "name": "master_prod@srv-76-133",
-      "tests": "generic"
+      "tests": ["generic", "production"]
     }
   ]
 }
