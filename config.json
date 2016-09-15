@@ -6,6 +6,22 @@
   "tests": {
     "generic": [
       {
+        "datasource": "newcloak/newcloak-games-and-players@airdb.mpi-sws.org",
+        "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
+        "timeout": 30,
+        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]],
+        "real_result": [[56, 7], [61, 9], [62, 8], [64, 7], ["*", 85]],
+        "users": [5, 6, 5, 5, 11]
+      },
+      {
+        "datasource": "newcloak/newcloak-games-and-players@airdb.mpi-sws.org",
+        "query": "SELECT SUM(winpoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age < 18",
+        "timeout": 30,
+        "expects": [[8180]],
+        "real_result": [[9514]],
+        "users": [17]
+      },
+      {
         "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
         "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 7",
         "timeout": 30,
@@ -48,34 +64,42 @@
     ],
     "stage": [
       {
-        "datasource": "newcloak/newcloak-games and players@airdb.mpi-sws.org",
-        "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
-        "timeout": 30,
-        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]],
-        "real_result": [[56, 7], [61, 9], [62, 8], [64, 7], ["*", 85]],
-        "users": [5, 6, 5, 5, 11]
-      },
-      {
         "datasource": "dsproxy/med@stage_ds_proxy",
         "query": "SELECT COUNT(status) FROM pt_mail",
         "timeout": 30,
         "expects": [[3577]]
+      },
+      {
+        "datasource": "dsproxy/med@stage_ds_proxy",
+        "query": "SELECT age, count(*) FROM (SELECT datediff(year, date_of_birth, getdate()) AS age FROM patients WHERE firstname = 'Alison') AS t GROUP BY age ORDER BY age ASC ",
+        "timeout": 30,
+        "expects": [[52, 5], ["*", 9]]
+      },
+      {
+        "datasource": "dsproxy/med@stage_ds_proxy",
+        "query": "SELECT diagnosis, count(*) FROM (SELECT d.patient_id, k.keyword as diagnosis FROM pt_diagnoses d JOIN diagnosis_keywords k ON d.code = k.code WHERE k.keyword = 'cancer' GROUP BY d.patient_id, k.keyword) t GROUP BY diagnosis",
+        "timeout": 30,
+        "expects": [["cancer", 254]]
       }
     ],
     "production": [
-      {
-        "datasource": "newcloak/newcloak-games-and-players@airdb.mpi-sws.org",
-        "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
-        "timeout": 30,
-        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]],
-        "real_result": [[56, 7], [61, 9], [62, 8], [64, 7], ["*", 85]],
-        "users": [5, 6, 5, 5, 11]
-      },
       {
         "datasource": "med/med@dsproxy",
         "query": "SELECT COUNT(status) FROM pt_mail",
         "timeout": 30,
         "expects": [[3577]]
+      },
+      {
+        "datasource": "med/med@dsproxy",
+        "query": "SELECT age, count(*) FROM (SELECT datediff(year, date_of_birth, getdate()) AS age FROM patients WHERE firstname = 'Alison') AS t GROUP BY age ORDER BY age ASC ",
+        "timeout": 30,
+        "expects": [[52, 5], ["*", 9]]
+      },
+      {
+        "datasource": "med/med@dsproxy",
+        "query": "SELECT diagnosis, count(*) FROM (SELECT d.patient_id, k.keyword as diagnosis FROM pt_diagnoses d JOIN diagnosis_keywords k ON d.code = k.code WHERE k.keyword = 'cancer' GROUP BY d.patient_id, k.keyword) t GROUP BY diagnosis",
+        "timeout": 30,
+        "expects": [["cancer", 254]]
       }
     ]
   },
@@ -83,12 +107,12 @@
     {
       "url": "insights-stage.aircloak.com",
       "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNzg0NWExMjktNTBjYS00ODA3LTgzN2UtYmYyYjAyNzBjNzJlZAAGc2lnbmVkbgYAaGokBVcB.wbJAqKP3jRVNUwUnxybIjgZ1Q2zbA2DIU-NKFO907_k",
-      "tests": ["generic", "stage"]
+      "tests": ["stage", "generic"]
     },
     {
       "url": "insights.aircloak.com",
       "token": "g3QAAAACZAAEZGF0YW0AAAAkMmUwYTVkMTgtNThlYy00ZjE0LTkwNjItOTBkZjZjYzRiMGE4ZAAGc2lnbmVkbgYApejcflYB##JW3qkvLENz4JnKY6HK1vo9DzcEA=",
-      "tests": ["generic", "production"]
+      "tests": ["production", "generic"]
     }
   ]
 }
