@@ -71,9 +71,9 @@
       },
       {
         "datasource": "dsproxy/med@stage_ds_proxy",
-        "query": "SELECT age, count(*) FROM (SELECT datediff(year, date_of_birth, getdate()) AS age FROM patients WHERE firstname = 'Alison') AS t GROUP BY age ORDER BY age ASC ",
+        "query": "SELECT age, count(*) FROM (SELECT datediff(year, date_of_birth, getdate()) AS age FROM patients WHERE firstname = 'Ana') AS t GROUP BY age ORDER BY age ASC ",
         "timeout": 30,
-        "expects": [[52, 5], ["*", 9]]
+        "expects": [["*", 25]]
       },
       {
         "datasource": "dsproxy/med@stage_ds_proxy",
