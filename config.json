@@ -105,6 +105,11 @@
   },
   "cloaks": [
     {
+      "url": "cristian-air.aircloak.com",
+      "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkZjgxNmEzODgtMTk2OC00OWZmLWEzMDUtY2I1MzlkYjFmNmIxZAAGc2lnbmVkbgYAX2VblVcB.FNJSUcZXOAY7e-T-zxcaldKEeB4zXR_H5XnvCdlk2Js",
+      "tests": ["generic"]
+    },
+    {
       "url": "insights-stage.aircloak.com",
       "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNzg0NWExMjktNTBjYS00ODA3LTgzN2UtYmYyYjAyNzBjNzJlZAAGc2lnbmVkbgYAaGokBVcB.wbJAqKP3jRVNUwUnxybIjgZ1Q2zbA2DIU-NKFO907_k",
       "tests": ["stage", "generic"]
