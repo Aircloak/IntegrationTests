@@ -16,6 +16,7 @@ in case someone needs to investigate a failure during the test.
 If errors are encountered, a notification email is sent to the address specified in the configuration file.
 
 You can also run the tests manually at any time by executing the `run.sh` script.
+This script will also build and deploy the latest version of the air and cloak components before executing the tests.
 
 There are 2 types of tests being executed:
   - [main.rb](main.rb) - Main tests that verify if our infrastructure is working normally.
