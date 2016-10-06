@@ -57,7 +57,7 @@
         "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
         "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs < 60",
         "timeout": 900,
-        "expects": [[0, 9, 1, 1465618]],
+        "expects": [[0, 208, 1, 1465618]],
         "real_result": [[0, 208, 1, 14709009]],
         "users": [14056]
       }
@@ -81,43 +81,13 @@
         "timeout": 30,
         "expects": [["cancer", 254]]
       }
-    ],
-    "production": [
-      {
-        "datasource": "med/med@dsproxy",
-        "query": "SELECT COUNT(status) FROM pt_mail",
-        "timeout": 30,
-        "expects": [[3577]]
-      },
-      {
-        "datasource": "med/med@dsproxy",
-        "query": "SELECT age, count(*) FROM (SELECT datediff(year, date_of_birth, getdate()) AS age FROM patients WHERE firstname = 'Ana') AS t GROUP BY age ORDER BY age ASC ",
-        "timeout": 30,
-        "expects": [["*", 25]]
-      },
-      {
-        "datasource": "med/med@dsproxy",
-        "query": "SELECT diagnosis, count(*) FROM (SELECT d.patient_id, k.keyword as diagnosis FROM pt_diagnoses d JOIN diagnosis_keywords k ON d.code = k.code WHERE k.keyword = 'cancer' GROUP BY d.patient_id, k.keyword) t GROUP BY diagnosis",
-        "timeout": 30,
-        "expects": [["cancer", 254]]
-      }
     ]
   },
   "cloaks": [
     {
-      "url": "cristian-air.aircloak.com",
-      "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkZjgxNmEzODgtMTk2OC00OWZmLWEzMDUtY2I1MzlkYjFmNmIxZAAGc2lnbmVkbgYAX2VblVcB.FNJSUcZXOAY7e-T-zxcaldKEeB4zXR_H5XnvCdlk2Js",
+      "url": "nightly-air.aircloak.com",
+      "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNGFiMDc5YTctYjM1ZS00NDgyLWFlZjAtNzRhMmY2ZTM3MmZlZAAGc2lnbmVkbgYAab6qmVcB.T_j5M5Kix3k2wLo8qefhC9EcqQ0UEddkjbpOpvD5zY0",
       "tests": ["generic"]
-    },
-    {
-      "url": "insights-stage.aircloak.com",
-      "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNzg0NWExMjktNTBjYS00ODA3LTgzN2UtYmYyYjAyNzBjNzJlZAAGc2lnbmVkbgYAaGokBVcB.wbJAqKP3jRVNUwUnxybIjgZ1Q2zbA2DIU-NKFO907_k",
-      "tests": ["stage", "generic"]
-    },
-    {
-      "url": "insights.aircloak.com",
-      "token": "g3QAAAACZAAEZGF0YW0AAAAkMmUwYTVkMTgtNThlYy00ZjE0LTkwNjItOTBkZjZjYzRiMGE4ZAAGc2lnbmVkbgYApejcflYB##JW3qkvLENz4JnKY6HK1vo9DzcEA=",
-      "tests": ["production", "generic"]
     }
   ]
 }
