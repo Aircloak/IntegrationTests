@@ -4,7 +4,7 @@
   "email_server": "localhost",
   "email_port": 25,
   "tests": {
-    "newcloak": [
+    "newcloak_postgresql": [
       {
         "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
         "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
@@ -23,7 +23,43 @@
       },
       {
         "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+        "query": "SELECT AVG(count) FROM (SELECT player, count(*) AS count FROM games GROUP BY player) AS t",
+        "timeout": 30,
+        "expects": [[10.514]]
+      },
+      {
+        "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
         "query": "SELECT firstname FROM players WHERE firstname = 'abc \\''~!@#{$1%^&1*(){}[]_+-=?/\\<>\b\",.:;\t 123'",
+        "timeout": 30,
+        "expects": []
+      }
+    ],
+    "newcloak_mysql": [
+      {
+        "datasource": "newcloak/newcloak@acmysql.mpi-sws.org",
+        "query": "SELECT winPoints, COUNT(firstName) FROM players JOIN games ON players.uid = games.player WHERE firstName = 'Ryker' GROUP BY winPoints ORDER BY winPoints",
+        "timeout": 30,
+        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]],
+        "real_result": [[56, 7], [61, 9], [62, 8], [64, 7], ["*", 85]],
+        "users": [5, 6, 5, 5, 11]
+      },
+      {
+        "datasource": "newcloak/newcloak@acmysql.mpi-sws.org",
+        "query": "SELECT SUM(winPoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age < 18",
+        "timeout": 30,
+        "expects": [[8180]],
+        "real_result": [[9514]],
+        "users": [17]
+      },
+      {
+        "datasource": "newcloak/newcloak@acmysql.mpi-sws.org",
+        "query": "SELECT AVG(count) FROM (SELECT player, count(*) AS count FROM games GROUP BY player) AS t",
+        "timeout": 30,
+        "expects": [[10.514]]
+      },
+      {
+        "datasource": "newcloak/newcloak@acmysql.mpi-sws.org",
+        "query": "SELECT firstName FROM players WHERE firstName = 'abc \\''~!@#{$1%^&1*(){}[]_+-=?/\\<>\b\",.:;\t 123'",
         "timeout": 30,
         "expects": []
       }
@@ -95,7 +131,7 @@
         "datasource": "aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org",
         "query": "SELECT COUNT(*) FROM patients",
         "timeout": 30,
-        "expects": [[11255]]
+        "expects": [[11250]]
       },
       {
         "datasource": "aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org",
@@ -109,7 +145,7 @@
     {
       "url": "nightly-air.aircloak.com",
       "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNGFiMDc5YTctYjM1ZS00NDgyLWFlZjAtNzRhMmY2ZTM3MmZlZAAGc2lnbmVkbgYAab6qmVcB.T_j5M5Kix3k2wLo8qefhC9EcqQ0UEddkjbpOpvD5zY0",
-      "tests": ["newcloak", "med", "kia", "nyctaxi"]
+      "tests": ["newcloak_postgresql", "newcloak_mysql", "med", "kia", "nyctaxi"]
     }
   ]
 }
