@@ -32,6 +32,18 @@
         "query": "SELECT firstname FROM players WHERE firstname = 'abc \\''~!@#{$1%^&1*(){}[]_+-=?/\\<>\b\",.:;\t 123'",
         "timeout": 30,
         "expects": []
+      },
+      {
+        "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+        "query": "SELECT winpoints, COUNT(*) FROM players JOIN games ON players.uid = games.player GROUP BY winpoints HAVING COUNT(*) BETWEEN 100 AND 300 ORDER BY winpoints LIMIT 2",
+        "timeout": 30,
+        "expects": [[50, 200], [79, 228]]
+      },
+      {
+        "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+        "query": "SELECT MEDIAN(level) FROM (SELECT uid, level FROM players ORDER BY level DESC LIMIT 25 OFFSET 5) AS t",
+        "timeout": 30,
+        "expects": [[10]]
       }
     ],
     "newcloak_mysql": [
