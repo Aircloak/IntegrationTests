@@ -13,9 +13,9 @@
       },
       {
         "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
-        "query": "SELECT SUM(winpoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age < 18",
+        "query": "SELECT SUM(winpoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age > 0 and age < 18",
         "timeout": 30,
-        "expects": [[8180]]
+        "expects": [[52815]]
       },
       {
         "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
@@ -51,9 +51,9 @@
       },
       {
         "datasource": "newcloak/newcloak@acmysql.mpi-sws.org",
-        "query": "SELECT SUM(winPoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age < 18",
+        "query": "SELECT SUM(winPoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age > 0 and age < 18",
         "timeout": 30,
-        "expects": [[8180]]
+        "expects": [[52815]]
       },
       {
         "datasource": "newcloak/newcloak@acmysql.mpi-sws.org",
@@ -71,9 +71,9 @@
     "nyctaxi": [
       {
         "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
-        "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 7",
+        "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 8 and passenger_count < 10",
         "timeout": 30,
-        "expects": [[82, 363.488, 583.733]]
+        "expects": [[37, 342.27, 524.434]]
       },
       {
         "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
@@ -83,21 +83,21 @@
       },
       {
         "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
-        "query": "SELECT COUNT(DISTINCT passenger_count) FROM trips WHERE trip_time_in_secs > 5000",
+        "query": "SELECT COUNT(DISTINCT passenger_count) FROM trips WHERE trip_time_in_secs > 5000 and trip_time_in_secs < 10000",
         "timeout": 600,
-        "expects": [[8]]
+        "expects": [[11]]
       },
       {
         "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
-        "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 AND passenger_count <> 4",
+        "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 and trip_time_in_secs < 2600 AND passenger_count <> 4",
         "timeout": 900,
-        "expects": [[2729316]]
+        "expects": [[415368]]
       },
       {
         "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
-        "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs < 60",
+        "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs >= 0 and trip_time_in_secs < 50",
         "timeout": 900,
-        "expects": [[0, 208, 1, 1465618]]
+        "expects": [[0, 208, 1, 1343185]]
       }
     ],
     "med": [
