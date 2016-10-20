@@ -9,9 +9,7 @@ The files are installed at `srv-76-131:/aircloak/tests/integration`. All output 
 In case of errors, check the log entries, grouped by days, for details.
 
 You can edit the [configuration file](config.json) to add more tests or change the target machines.
-When adding a new test, check that the expected results are sensible. Also, please record the real
-results and the number of users selected. These values are not used (yet), but they can be valuable
-in case someone needs to investigate a failure during the test.
+When adding a new test, check that the expected results are sensible.
 
 If errors are encountered, a notification email is sent to the address specified in the configuration file.
 
