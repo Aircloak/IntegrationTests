@@ -4,149 +4,129 @@
   "email_server": "localhost",
   "email_port": 25,
   "tests": {
-    "newcloak_postgresql": [
+    "games and players": [
       {
-        "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+        "datasources": [
+          "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+          "newcloak/newcloak@acmysql.mpi-sws.org",
+          "newcloak/newcloak-games-and-players@airdb.mpi-sws.org"
+        ],
         "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
         "timeout": 30,
-        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]],
-        "real_result": [[56, 7], [61, 9], [62, 8], [64, 7], ["*", 85]],
-        "users": [5, 6, 5, 5, 11]
+        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]]
       },
       {
-        "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
-        "query": "SELECT SUM(winpoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age < 18",
+        "datasources": [
+          "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+          "newcloak/newcloak@acmysql.mpi-sws.org",
+          "newcloak/newcloak-games-and-players@airdb.mpi-sws.org"
+        ],
+        "query": "SELECT SUM(winpoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age > 0 and age < 18",
         "timeout": 30,
-        "expects": [[8180]],
-        "real_result": [[9514]],
-        "users": [17]
+        "expects": [[52815]]
       },
       {
-        "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+        "datasources": [
+          "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+          "newcloak/newcloak@acmysql.mpi-sws.org",
+          "newcloak/newcloak-games-and-players@airdb.mpi-sws.org"
+        ],
         "query": "SELECT AVG(count) FROM (SELECT player, count(*) AS count FROM games GROUP BY player) AS t",
         "timeout": 30,
         "expects": [[10.514]]
       },
       {
-        "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+        "datasources": [
+          "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+          "newcloak/newcloak@acmysql.mpi-sws.org",
+          "newcloak/newcloak-games-and-players@airdb.mpi-sws.org"
+        ],
         "query": "SELECT firstname FROM players WHERE firstname = 'abc \\''~!@#{$1%^&1*(){}[]_+-=?/\\<>\b\",.:;\t 123'",
         "timeout": 30,
         "expects": []
       },
       {
-        "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+        "datasources": [
+          "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+          "newcloak/newcloak@acmysql.mpi-sws.org",
+          "newcloak/newcloak-games-and-players@airdb.mpi-sws.org"
+        ],
         "query": "SELECT winpoints, COUNT(*) FROM players JOIN games ON players.uid = games.player GROUP BY winpoints HAVING COUNT(*) BETWEEN 100 AND 300 ORDER BY winpoints LIMIT 2",
         "timeout": 30,
         "expects": [[50, 200], [79, 228]]
       },
       {
-        "datasource": "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+        "datasources": [
+          "newcloak/newcloak-odbc-postgresql@airdb.mpi-sws.org",
+          "newcloak/newcloak@acmysql.mpi-sws.org",
+          "newcloak/newcloak-games-and-players@airdb.mpi-sws.org"
+        ],
         "query": "SELECT MEDIAN(level) FROM (SELECT uid, level FROM players ORDER BY level DESC LIMIT 25 OFFSET 5) AS t",
         "timeout": 30,
         "expects": [[10]]
       }
     ],
-    "newcloak_mysql": [
-      {
-        "datasource": "newcloak/newcloak@acmysql.mpi-sws.org",
-        "query": "SELECT winPoints, COUNT(firstName) FROM players JOIN games ON players.uid = games.player WHERE firstName = 'Ryker' GROUP BY winPoints ORDER BY winPoints",
-        "timeout": 30,
-        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]],
-        "real_result": [[56, 7], [61, 9], [62, 8], [64, 7], ["*", 85]],
-        "users": [5, 6, 5, 5, 11]
-      },
-      {
-        "datasource": "newcloak/newcloak@acmysql.mpi-sws.org",
-        "query": "SELECT SUM(winPoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age < 18",
-        "timeout": 30,
-        "expects": [[8180]],
-        "real_result": [[9514]],
-        "users": [17]
-      },
-      {
-        "datasource": "newcloak/newcloak@acmysql.mpi-sws.org",
-        "query": "SELECT AVG(count) FROM (SELECT player, count(*) AS count FROM games GROUP BY player) AS t",
-        "timeout": 30,
-        "expects": [[10.514]]
-      },
-      {
-        "datasource": "newcloak/newcloak@acmysql.mpi-sws.org",
-        "query": "SELECT firstName FROM players WHERE firstName = 'abc \\''~!@#{$1%^&1*(){}[]_+-=?/\\<>\b\",.:;\t 123'",
-        "timeout": 30,
-        "expects": []
-      }
-    ],
     "nyctaxi": [
       {
-        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
-        "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 7",
+        "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
+        "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 8 and passenger_count < 10",
         "timeout": 30,
-        "expects": [[82, 363.488, 583.733]],
-        "real_result": [[102, 434.284, 571.950]],
-        "users": [53]
+        "expects": [[37, 342.27, 524.434]]
       },
       {
-        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
+        "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT passenger_count AS pc, COUNT(*) FROM trips WHERE passenger_count IN (7,8,9,10) GROUP BY pc ORDER BY pc",
         "timeout": 30,
-        "expects": [[7, 26], [8, 19], [9, 16]],
-        "real_result": [[7, 35], [8, 25], [9, 26]],
-        "users": [46]
+        "expects": [[7, 26], [8, 19], [9, 16]]
       },
       {
-        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
-        "query": "SELECT COUNT(DISTINCT passenger_count) FROM trips WHERE trip_time_in_secs > 5000",
+        "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
+        "query": "SELECT COUNT(DISTINCT passenger_count) FROM trips WHERE trip_time_in_secs > 5000 and trip_time_in_secs < 10000",
         "timeout": 600,
-        "expects": [[8]],
-        "real_result": [[7]],
-        "users": [12798]
+        "expects": [[11]]
       },
       {
-        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
-        "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 AND passenger_count <> 4",
+        "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
+        "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 and trip_time_in_secs < 5000 AND passenger_count <> 4",
         "timeout": 900,
-        "expects": [[2729316]],
-        "real_result": [[2729328]],
-        "users": [13562]
+        "expects": [[2721048]]
       },
       {
-        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
-        "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs < 60",
+        "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
+        "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs >= 0 and trip_time_in_secs < 50",
         "timeout": 900,
-        "expects": [[0, 208, 1, 1465618]],
-        "real_result": [[0, 208, 1, 14709009]],
-        "users": [14056]
+        "expects": [[0, 208, 1, 1343185]]
       }
     ],
-    "med": [
+    "medical database (dsproxy)": [
       {
-        "datasource": "dsproxy/med@stage_ds_proxy",
+        "datasources": ["dsproxy/med@stage_ds_proxy"],
         "query": "SELECT COUNT(status) FROM pt_mail",
         "timeout": 30,
         "expects": [[3577]]
       },
       {
-        "datasource": "dsproxy/med@stage_ds_proxy",
+        "datasources": ["dsproxy/med@stage_ds_proxy"],
         "query": "SELECT age, count(*) FROM (SELECT datediff(year, date_of_birth, getdate()) AS age FROM patients WHERE firstname = 'Ana') AS t GROUP BY age ORDER BY age ASC",
         "timeout": 30,
         "expects": [["*", 25]]
       },
       {
-        "datasource": "dsproxy/med@stage_ds_proxy",
+        "datasources": ["dsproxy/med@stage_ds_proxy"],
         "query": "SELECT diagnosis, count(*) FROM (SELECT d.patient_id, k.keyword as diagnosis FROM pt_diagnoses d JOIN diagnosis_keywords k ON d.code = k.code WHERE k.keyword = 'cancer' GROUP BY d.patient_id, k.keyword) t GROUP BY diagnosis",
         "timeout": 30,
         "expects": [["cancer", 254]]
       }
     ],
-    "kia": [
+    "medical database": [
       {
-        "datasource": "aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org",
+        "datasources": ["aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org"],
         "query": "SELECT COUNT(*) FROM patients",
         "timeout": 30,
         "expects": [[11250]]
       },
       {
-        "datasource": "aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org",
+        "datasources": ["aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org"],
         "query": "SELECT firstname FROM patients WHERE firstname = 'abc \\''~!@#{$1%^&1*(){}[]_+-=?/\\<>\b\",.:;\t 123'",
         "timeout": 30,
         "expects": []
@@ -157,7 +137,7 @@
     {
       "url": "nightly-air.aircloak.com",
       "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNGFiMDc5YTctYjM1ZS00NDgyLWFlZjAtNzRhMmY2ZTM3MmZlZAAGc2lnbmVkbgYAab6qmVcB.T_j5M5Kix3k2wLo8qefhC9EcqQ0UEddkjbpOpvD5zY0",
-      "tests": ["newcloak_postgresql", "newcloak_mysql", "med", "kia", "nyctaxi"]
+      "tests": ["games and players", "nyctaxi", "medical database (dsproxy)", "medical database"]
     }
   ]
 }
