@@ -126,10 +126,7 @@
         "expects": [[11250]]
       },
       {
-        "datasources": [
-          "aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org",
-          "dsproxy/med@stage_ds_proxy"
-        ],
+        "datasources": ["aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org"],
         "query": "SELECT firstname FROM patients WHERE firstname = 'abc \\''~!@#{$1%^&1*(){}[]_+-=?/\\<>\b\",.:;\t 123'",
         "timeout": 30,
         "expects": []
