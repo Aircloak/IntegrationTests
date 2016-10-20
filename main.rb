@@ -10,11 +10,11 @@ require 'date'
 
 $errors = []
 
-def store_error(url, test, error)
+def store_error(url, datasource, test, error)
   cell_style = 'style="border: 1px solid lightgrey"'
   message = <<ENDOFMESSAGE
   <tr><td #{cell_style}>Error</td><td #{cell_style}>#{error}</td></tr>
-  <tr><td #{cell_style}>Target</td><td #{cell_style}>[#{url}]: #{test["datasource"]}</td></tr>
+  <tr><td #{cell_style}>Target</td><td #{cell_style}>[#{url}]: #{datasource}</td></tr>
   <tr><td #{cell_style}>Query</td><td #{cell_style}>#{test["query"]}</td></tr>
 ENDOFMESSAGE
   $errors.push(message)
@@ -38,17 +38,21 @@ end
 
 def test_cloak(url, api_token, tests)
   puts "Running tests on '#{url}' ..."
-  tests.each do |test| run_test(url, api_token, test) end
+  tests.each do |test|
+    test["datasources"].each do |datasource|
+      run_test(url, api_token, datasource, test)
+    end
+  end
 end
 
-def run_test(url, api_token, test)
+def run_test(url, api_token, datasource, test)
   # Note: This log line is used by the perf.rb script to extract timing information.
   # If you modify it, you must update the parsing code in that file also.
-  print "Executing query '#{test["query"]}' on '#{test["datasource"]} [#{url}]' "
-  result = execute_query(url, api_token, test["datasource"], test["query"], test["timeout"])
+  print "Executing query '#{test["query"]}' on '#{datasource} [#{url}]' "
+  result = execute_query(url, api_token, datasource, test["query"], test["timeout"])
   if result != test["expects"] then raise "Expected: #{test["expects"]}, got: #{result}" end
 rescue => error
-  store_error(url, test, error)
+  store_error(url, datasource, test, error)
   puts " failed: #{error}."
   puts "Backtrace:\n\t#{error.backtrace.join("\n\t")}"
 end
