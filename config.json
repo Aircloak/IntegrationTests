@@ -13,7 +13,7 @@
         ],
         "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
         "timeout": 30,
-        "expects": [[56, 3], [61, 4], [62, 3], [64, 3], ["*", 56]]
+        "expects": [[55, 2], [56, 3], [60, 4], [61, 4], [62, 3], [63, 7], [64, 3], [65, 2], [66, 2], [70, 2], ["*", 24]]
       },
       {
         "datasources": [
@@ -123,7 +123,7 @@
         "datasources": ["aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org"],
         "query": "SELECT COUNT(*) FROM patients",
         "timeout": 30,
-        "expects": [[11250]]
+        "expects": [[11253]]
       },
       {
         "datasources": ["aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org"],
