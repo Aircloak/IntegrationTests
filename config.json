@@ -71,7 +71,7 @@
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 8 and passenger_count < 10",
         "timeout": 30,
-        "expects": [[37, 342.27, 524.434]]
+        "expects": [[37, 351.081, 524.434]]
       },
       {
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
@@ -89,13 +89,13 @@
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 and trip_time_in_secs < 5000 AND passenger_count <> 4",
         "timeout": 900,
-        "expects": [[2721048]]
+        "expects": [[2721274]]
       },
       {
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs >= 0 and trip_time_in_secs < 50",
         "timeout": 900,
-        "expects": [[0, 208, 1, 1343185]]
+        "expects": [[0, 208, 1, 1343467]]
       }
     ],
     "medical database (dsproxy)": [
@@ -103,7 +103,7 @@
         "datasources": ["dsproxy/med@stage_ds_proxy"],
         "query": "SELECT COUNT(status) FROM pt_mail",
         "timeout": 30,
-        "expects": [[3577]]
+        "expects": [[3562]]
       },
       {
         "datasources": ["dsproxy/med@stage_ds_proxy"],
