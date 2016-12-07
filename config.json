@@ -98,26 +98,6 @@
         "expects": [[0, 208, 1, 1343467]]
       }
     ],
-    "medical database (dsproxy)": [
-      {
-        "datasources": ["dsproxy/med@stage_ds_proxy"],
-        "query": "SELECT COUNT(status) FROM pt_mail",
-        "timeout": 30,
-        "expects": [[3562]]
-      },
-      {
-        "datasources": ["dsproxy/med@stage_ds_proxy"],
-        "query": "SELECT age, count(*) FROM (SELECT datediff(year, date_of_birth, getdate()) AS age FROM patients WHERE firstname = 'Ana') AS t GROUP BY age ORDER BY age ASC",
-        "timeout": 30,
-        "expects": [["*", 25]]
-      },
-      {
-        "datasources": ["dsproxy/med@stage_ds_proxy"],
-        "query": "SELECT diagnosis, count(*) FROM (SELECT d.patient_id, k.keyword as diagnosis FROM pt_diagnoses d JOIN diagnosis_keywords k ON d.code = k.code WHERE k.keyword = 'cancer' GROUP BY d.patient_id, k.keyword) t GROUP BY diagnosis",
-        "timeout": 30,
-        "expects": [["cancer", 254]]
-      }
-    ],
     "medical database": [
       {
         "datasources": ["aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org"],
