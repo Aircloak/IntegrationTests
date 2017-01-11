@@ -85,7 +85,7 @@
         ],
         "query": "SELECT SUM(winpoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age > 0 and age < 18",
         "timeout": 30,
-        "expects": [[52815]]
+        "expects": [[52690]]
       },
       {
         "datasources": [
@@ -133,7 +133,7 @@
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 8 and passenger_count < 10",
         "timeout": 30,
-        "expects": [[37, 351.081, 524.434]]
+        "expects": [[25, 271.08, 507.728]]
       },
       {
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
