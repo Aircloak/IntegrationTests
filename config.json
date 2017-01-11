@@ -37,9 +37,9 @@
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
-        "query": "SELECT EXTRACT_MATCHES(concat(concat(verwendungszweck, ' '), buchungstext), '\w+') as word, count(*) FROM umsatz WHERE verwendungszweck ILIKE '%rückzahlung%' GROUP BY word ORDER BY count(*) DESC LIMIT 10",
+        "query": "SELECT EXTRACT_MATCHES(concat(concat(verwendungszweck, ' '), buchungstext), '\\w{4,}') as word, count(*) FROM umsatz WHERE verwendungszweck ILIKE '%zahlung%' GROUP BY word HAVING count(*) > 100 ORDER BY count(*) DESC LIMIT 10",
         "timeout": 30,
-        "expects": []
+        "expects": [["477771", 127], ["Zahlung", 127]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
