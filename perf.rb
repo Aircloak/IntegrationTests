@@ -95,10 +95,18 @@ config["cloaks"].each do |cloak|
   end
 end
 
-if not $warnings.empty? then
-  message = format_mail(config["email_from"], config["email_to"])
-  Net::SMTP.start(config["email_server"], config["email_port"]) do |smtp|
-    smtp.send_message message, config["email_from"], config["email_to"]
-    puts "Notification email sent!"
-  end
-end
+# Because of the rampant fluctuations in performance on the NYC Taxi database
+# dataset, that we are unable to explain, we disable the performance degradation
+# emails for now.
+#
+# Just disabling doesn't solve any problems, so this should be accompanied by
+# a subsequent task of pushing the data to elastic so we have easily browsable
+# historic results.
+
+# if not $warnings.empty? then
+#   message = format_mail(config["email_from"], config["email_to"])
+#   Net::SMTP.start(config["email_server"], config["email_port"]) do |smtp|
+#     smtp.send_message message, config["email_from"], config["email_to"]
+#     puts "Notification email sent!"
+#   end
+# end
