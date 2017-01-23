@@ -21,7 +21,7 @@ ENDOFMESSAGE
 end
 
 def format_mail(from, to)
-  message = <<ENDOFMESSAGE
+  <<ENDOFMESSAGE
 From: <#{from}>
 To: <#{to}>
 MIME-Version: 1.0
