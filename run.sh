@@ -13,8 +13,8 @@ if ! (set -o pipefail && cd aircloak && git pull && ./publish.sh nightly 2>&1 | 
   exit
 fi
 
-echo "Deploy complete! Waiting 30 seconds for nightly air/cloak to stabilise ..."
-sleep 30
+echo "Deploy complete! Waiting 90 seconds for nightly air/cloak to stabilise ..."
+sleep 90
 
 # execute integration and performance regression tests
 export http_proxy=""
