@@ -157,7 +157,7 @@
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs >= 0 and trip_time_in_secs < 50",
         "timeout": 900,
-        "expects": [[0, 208, 1, 1343357]]
+        "expects": [[0, 9, 1, 1343357]]
       }
     ],
     "medical database": [
