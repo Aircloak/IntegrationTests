@@ -1,2 +1,4 @@
-mocha:
-	NODE_PATH=frontend npm test
+.PHONY: test
+
+test:
+	node_modules/.bin/wdio wdio.conf.js
