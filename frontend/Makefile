@@ -1,4 +1,4 @@
-.PHONY: test
+.PHONY: test deps start_deps
 
 deps:
 	yarn install
@@ -6,5 +6,5 @@ deps:
 start_deps:
 	./start_dependencies.sh
 
-test:
+test: deps start_deps
 	node_modules/.bin/wdio wdio.conf.js
