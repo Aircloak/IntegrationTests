@@ -1,7 +1,7 @@
 .PHONY: test deps start_deps
 
 deps:
-	yarn install
+	npm install
 
 start_deps:
 	./start_dependencies.sh
