@@ -2,7 +2,7 @@
 
 cd "$(dirname "$0")"
 
-LOG="../logs/frontend-`date +%F.log`"
+LOG="./logs/frontend-`date +%F.log`"
 EMAIL="everyone-dev@aircloak.com"
 
 make test 2>&1 | tee -a $LOG
