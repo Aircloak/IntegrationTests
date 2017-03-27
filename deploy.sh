@@ -2,4 +2,6 @@
 
 cd "$(dirname "$0")"
 
-scp config.json run.sh *.rb srv-76-131:/aircloak/tests/integration/
+scp run.sh srv-76-131:/aircloak/tests/integration/
+
+./backend/deploy.sh # backend files
