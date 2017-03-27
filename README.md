@@ -18,6 +18,8 @@ This script will also build and deploy the latest version of the air and cloak c
 
 There are 2 types of tests being executed:
   - [main.rb](main.rb) - Main tests that verify if our infrastructure is working normally.
+    - First, load testing is performed which executes multiple, complex queries in parallel.
+    - Second, the tests that verify the cloak is functioning normally are performed.
   - [perf.rb](perf.rb) - Performance regression tests that warn when the duration for a query increases.
 
 __NOTE__: Because of the way queries are executed (polling is used to wait for a query to complete),
