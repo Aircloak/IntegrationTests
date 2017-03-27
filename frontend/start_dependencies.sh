@@ -1,3 +1,5 @@
+#!/bin/bash
+
 CONTAINER_NAME=selenium
 IMAGE_NAME=selenium/firefox-standalone
 
