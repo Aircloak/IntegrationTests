@@ -1,4 +1,4 @@
-## Aircloak integration tests
+## Aircloak system tests
 
 This repository contains a very simple test harness which verifies that our infrastructure is functioning properly.
 
@@ -17,10 +17,8 @@ You can also run the tests manually at any time by executing the `run.sh` script
 This script will also build and deploy the latest version of the air and cloak components before executing the tests.
 
 There are 2 types of tests being executed:
-  - [main.rb](main.rb) - Main tests that verify if our infrastructure is working normally.
-    - First, load testing is performed which executes multiple, complex queries in parallel.
-    - Second, the tests that verify the cloak is functioning normally are performed.
-  - [perf.rb](perf.rb) - Performance regression tests that warn when the duration for a query increases.
+  - First, load testing is performed, which executes multiple, complex queries in parallel.
+  - Second, the tests that verify the cloak is functioning normally are performed.
 
 __NOTE__: Because of the way queries are executed (polling is used to wait for a query to complete),
 timing information is accurate only within 1% of the test timeout value or 2 seconds, whichever is greater.

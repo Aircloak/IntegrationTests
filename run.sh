@@ -16,8 +16,7 @@ fi
 echo "Deploy complete! Waiting 90 seconds for nightly air/cloak to stabilise ..."
 sleep 90
 
-# execute integration and performance regression tests
+# execute integration tests
 export http_proxy=""
 LOG="./logs/`date +%F.log`"
 ./main.rb 2>&1 | tee -a "$LOG"
-./perf.rb 2>&1 | tee -a "$LOG"
