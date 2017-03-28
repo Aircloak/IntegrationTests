@@ -9,8 +9,5 @@
     "wdio-dot-reporter": "0.0.8",
     "wdio-mocha-framework": "^0.5.9",
     "webdriverio": "^4.6.2"
-  },
-  "scripts": {
-    "test": "mocha --reporter dot --compilers js:babel-register frontend/**/*.js"
   }
 }
