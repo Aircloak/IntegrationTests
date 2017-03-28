@@ -1,7 +1,5 @@
 import assert from "assert";
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 describe("login", () => {
   it("shows a message for incorrect login info", () => {
     browser.url("/auth");
