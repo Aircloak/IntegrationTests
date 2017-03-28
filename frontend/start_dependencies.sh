@@ -12,5 +12,5 @@ function named_container_running {
 }
 
 if ! named_container_running $CONTAINER_NAME ; then
-	docker run --name $CONTAINER_NAME -d -p 4444:4444 $IMAGE_NAME
+  docker run --name $CONTAINER_NAME -d -p 4444:4444 $IMAGE_NAME
 fi
