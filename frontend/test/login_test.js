@@ -9,7 +9,9 @@ describe("login", () => {
     browser.setValue("[name='password']", "1234");
     browser.click("form button");
 
-    browser.waitForText(".alert-danger", "Invalid e-mail or password.");
+    browser.waitUntil(() =>
+      browser.getText(".alert-danger").includes("Invalid e-mail or password.")
+    );
     assert(browser.getUrl().endsWith("/auth"));
   });
 
@@ -19,6 +21,8 @@ describe("login", () => {
     browser.setValue("[name='password']", admin.password);
     browser.click("form button");
 
-    browser.waitForText(".alert-info", "Logged in successfully.");
+    browser.waitUntil(() =>
+      browser.getText(".alert-info").includes("Logged in successfully.")
+    );
   });
 });
