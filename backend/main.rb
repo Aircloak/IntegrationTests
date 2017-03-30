@@ -28,7 +28,7 @@ From: <#{from}>
 To: <#{to}>
 MIME-Version: 1.0
 Content-type: text/html
-Subject: Integration tests failed :(
+Subject: Backend system tests failed :(
 
 <table style="border-collapse: collapse;" cellpadding="4" width="100%">
 #{$errors.join("<tr><td colspan='2'>&nbsp;</td></tr>")}
