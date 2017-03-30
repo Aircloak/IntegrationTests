@@ -48,8 +48,6 @@ def test_cloak(url, api_token, tests)
 end
 
 def run_test(url, api_token, datasource, test)
-  # Note: This log line is used by the perf.rb script to extract timing information.
-  # If you modify it, you must update the parsing code in that file also.
   print "Executing query '#{test["query"]}' on '#{datasource} [#{url}]' "
   result = execute_query(url, api_token, datasource, test["query"], test["timeout"])
   if result != test["expects"] then raise "Expected: #{test["expects"]}, got: #{result}" end
