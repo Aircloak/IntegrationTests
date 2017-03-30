@@ -6,7 +6,5 @@ export const loginAdmin = () => {
   browser.setValue("[name='password']", admin.password);
   browser.click("form button");
 
-  browser.waitUntil(() =>
-      browser.getText(".alert-info").includes("Logged in successfully.")
-  );
+  browser.waitUntil(() => browser.getSource().includes("Logged in successfully."));
 }
