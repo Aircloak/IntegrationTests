@@ -25,3 +25,48 @@ If errors are encountered, a notification email is sent to the address specified
 
 __NOTE__: Because of the way queries are executed (polling is used to wait for a query to complete),
 timing information is accurate only within 1% of the test timeout value or 2 seconds, whichever is greater.
+
+### Frontend tests
+
+The tests driving the system through the frontend are contained in the `/frontend` directory. The deployed version can
+be found on `srv-76-131:/aircloak/tests/frontend`. They are run an hour after the backend tests, on a separate
+instance of cloak/air called `browser_test` that's deployed from master just before running the tests.
+
+#### DB cleaning
+
+The tests run a script (`/frontend/reset_db.sh`) that clears the database before each run. When developing you can login
+to `srv-76-131` and run the script from there to get the same result.
+
+#### Running locally
+
+You can run the tests locally with:
+
+```bash
+make test
+```
+
+This will install node dependencies and download and run a selenium docker image before running the tests.
+
+#### Running one file
+
+Assuming you installed dependencies (`make deps && make start_deps`) you can run a single file with:
+
+```bash
+node_modules/.bin/wdio wdio.conf.js --spec test/file_to_run.js
+```
+
+#### Debugging
+
+You can watch the browser while the tests run if you start a debug version of the selenium image in place of the regular
+one:
+
+```bash
+# Remove current selenium
+docker rm -f selenium
+
+# Download and run the debug version mapping the VNC port 5900
+docker run --name selenium -d -p 4444:4444 -p 5900:5900 selenium/standalone-firefox-debug
+```
+
+You will also need to install a VNC viewer. After that just point your viewer to localhost and provide `secret` when
+asked for a password.
