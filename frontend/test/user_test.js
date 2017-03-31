@@ -23,4 +23,20 @@ describe("managing users", () => {
     browser.waitUntil(() => browser.isExisting(".alert-info*=User created"));
     assert(browser.getSource().includes(name));
   });
+
+  it("displays errors when adding a user", () => {
+    const name = randomString();
+
+    browser.url("/admin/users");
+    browser.click("*=Add user");
+    browser.waitUntil(() => browser.getSource().includes("New user"));
+
+    browser.setValue("#user_name", name);
+    browser.click("input[value='Save']");
+
+    browser.waitUntil(() => browser.getSource().includes("Please check the errors below"));
+    assert(browser.getSource().includes("can't be blank"));
+    browser.url("/admin/users");
+    assert.equal(browser.getSource().includes(name), false);
+  });
 });
