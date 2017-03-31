@@ -11,4 +11,5 @@ export PGPASSWORD="P5-lFVjGm0b2_3QYOZu1lNGG"
 
 psql -h $HOST -p $PORT -U $USER $NAME << EOF
   DELETE FROM USERS WHERE email <> 'admin@aircloak.com';
+  DELETE FROM GROUPS WHERE name <> 'Admin';
 EOF
