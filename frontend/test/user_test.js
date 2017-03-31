@@ -2,6 +2,7 @@ import assert from "assert";
 
 import {loginAdmin} from "./support/session";
 import {randomString} from "./support/random";
+import {createUser} from "./support/user";
 
 describe("managing users", () => {
   before(loginAdmin);
@@ -37,6 +38,16 @@ describe("managing users", () => {
     browser.waitUntil(() => browser.getSource().includes("Please check the errors below"));
     assert(browser.getSource().includes("can't be blank"));
     browser.url("/admin/users");
+    assert.equal(browser.getSource().includes(name), false);
+  });
+
+  it("allows removing a user", () => {
+    const {name} = createUser();
+
+    browser.url("/admin/users");
+    browser.element(`tr*=${name}`).click("a*=Delete");
+    browser.waitUntil(() => browser.getSource().includes("User deleted"));
+
     assert.equal(browser.getSource().includes(name), false);
   });
 });
