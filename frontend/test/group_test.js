@@ -2,7 +2,9 @@ import assert from "assert";
 
 import {loginAdmin} from "./support/session";
 import {randomString} from "./support/random";
-import {createGroup} from "./support/group";
+import {createUser} from "./support/user";
+import {createGroup, editGroup} from "./support/group";
+import {showDataSource} from "./support/data_source";
 
 describe("managing groups", () => {
   before(loginAdmin);
@@ -29,5 +31,20 @@ describe("managing groups", () => {
 
     browser.url("/admin/groups");
     assert.equal(browser.getSource().includes(name), false);
+  });
+
+  it("allowing access to a data source through a group", () => {
+    const {name: groupName} = createGroup();
+    const {name: userName} = createUser();
+
+    editGroup(groupName);
+    browser.element(`tr*=${userName}`).click("input[type='checkbox']");
+    browser.element("tr*=nyctaxi").click("input[type='checkbox']");
+    browser.click("input[value='Update group']");
+    browser.waitUntil(() => browser.getSource().includes("Group updated"));
+
+    showDataSource("nyctaxi");
+    assert(browser.element(".panel*=Users with access").isExisting(`tr*=${userName}`))
+    assert(browser.element(".panel*=Groups granting access").isExisting(`tr*=${groupName}`))
   });
 });
