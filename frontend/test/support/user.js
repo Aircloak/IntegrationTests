@@ -3,12 +3,13 @@ import {randomString} from "./random";
 export const createUser = () => {
   const name = randomString();
   const password = randomString();
+  const email = `some.email+${name}@aircloak.com`;
 
   browser.url("/admin/users");
   browser.click("*=Add user");
   browser.waitUntil(() => browser.getSource().includes("New user"));
 
-  browser.setValue("#user_email", `some.email+${name}@aircloak.com`);
+  browser.setValue("#user_email", email);
   browser.setValue("#user_name", name);
   browser.setValue("#user_password", password);
   browser.setValue("#user_password_confirmation", password);
@@ -16,5 +17,5 @@ export const createUser = () => {
 
   browser.waitUntil(() => browser.isExisting(".alert-info*=User created"));
 
-  return {name, password};
+  return {name, password, email};
 }

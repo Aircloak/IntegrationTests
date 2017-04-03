@@ -19,6 +19,6 @@ describe("login", () => {
     browser.setValue("[name='password']", admin.password);
     browser.click("form button");
 
-    browser.waitUntil(() => browser.getSource().includes("Logged in successfully."));
+    browser.waitUntil(() => browser.getSource().includes("Sign out"));
   });
 });
