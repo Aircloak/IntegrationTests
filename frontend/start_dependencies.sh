@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CONTAINER_NAME=selenium
-IMAGE_NAME=selenium/standalone-firefox:latest
+IMAGE_NAME=selenium/standalone-chrome:latest
 
 function named_container_running {
   if [ -z "$(docker ps --filter=name=$1 | grep -w $1)" ]; then
