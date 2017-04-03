@@ -1,4 +1,4 @@
-import {admin} from "../../config.json"
+import {admin} from "../config.json"
 
 export const loginAdmin = () => login(admin);
 

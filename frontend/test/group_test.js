@@ -1,10 +1,10 @@
 import assert from "assert";
 
-import {loginAdmin} from "./support/session";
-import {randomString} from "./support/random";
-import {createUser} from "./support/user";
-import {createGroup, editGroup} from "./support/group";
-import {showDataSource} from "./support/data_source";
+import {loginAdmin} from "../support/session";
+import {randomString} from "../support/random";
+import {createUser} from "../support/user";
+import {createGroup, editGroup} from "../support/group";
+import {showDataSource} from "../support/data_source";
 
 describe("managing groups", () => {
   before(loginAdmin);

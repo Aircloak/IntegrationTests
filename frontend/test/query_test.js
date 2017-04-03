@@ -1,8 +1,8 @@
 import assert from "assert";
 
-import {loginAdmin, login} from "./support/session";
-import {createUser} from "./support/user";
-import {allowDataSource, queryDataSource} from "./support/data_source";
+import {loginAdmin, login} from "../support/session";
+import {createUser} from "../support/user";
+import {allowDataSource, queryDataSource} from "../support/data_source";
 
 describe("queries", () => {
   before(() => {

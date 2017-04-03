@@ -1,8 +1,8 @@
 import assert from "assert";
 
-import {loginAdmin} from "./support/session";
-import {randomString} from "./support/random";
-import {createUser} from "./support/user";
+import {loginAdmin} from "../support/session";
+import {randomString} from "../support/random";
+import {createUser} from "../support/user";
 
 describe("managing users", () => {
   before(loginAdmin);
