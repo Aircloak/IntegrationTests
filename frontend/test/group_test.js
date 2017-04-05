@@ -17,9 +17,9 @@ describe("managing groups", () => {
     browser.click("input[value='Add group']");
 
     browser.waitUntil(() => browser.getSource().includes("Group created"));
-		assert(browser.isExisting(`h2*=Edit ${name}`));
-		browser.url("/admin/groups");
-		assert(browser.isExisting(`tr*=${name}`));
+    assert(browser.isExisting(`h2*=Edit ${name}`));
+    browser.url("/admin/groups");
+    assert(browser.isExisting(`tr*=${name}`));
   });
 
   it("allows removing a group", () => {
