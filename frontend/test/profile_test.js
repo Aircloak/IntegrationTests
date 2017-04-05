@@ -22,6 +22,5 @@ describe("profile page", () => {
     logout()
     user.password = newPassword;
     login(user);
-    assert(browser.getSource().includes("Sign out"));
   });
 });
