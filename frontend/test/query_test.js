@@ -24,6 +24,23 @@ describe("queries", () => {
     assert(browser.element(".panel-success").isExisting("tr*=hello world"));
   });
 
+  it("allows running a query with a keyboard shortcut", () => {
+    queryDataSource("games");
+
+    browser.element("#sql-editor").
+      keys("Control").
+      keys("a").
+      keys("Control").
+      keys("SELECT 'hello world' FROM GAMES").
+      keys("Control").
+      keys("Enter").
+      keys("Control");
+    browser.click("button*=Run");
+
+    browser.waitUntil(() => browser.isExisting(".panel-success"));
+    assert(browser.element(".panel-success").isExisting("tr*=hello world"));
+  });
+
   it("allows cancelling a query", () => {
     queryDataSource("games");
 
