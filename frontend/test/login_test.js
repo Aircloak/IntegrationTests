@@ -1,6 +1,7 @@
 import assert from "assert";
 
 import {admin} from "../config.json";
+import {logout} from "../support/session"
 
 describe("login", () => {
   it("shows a message for incorrect login info", () => {
@@ -20,5 +21,19 @@ describe("login", () => {
     browser.click("form button");
 
     browser.waitUntil(() => browser.getSource().includes("Sign out"));
+  });
+
+  it("remembers the user", () => {
+    logout();
+    browser.url("/auth");
+    browser.setValue("[name='email']", admin.email);
+    browser.setValue("[name='password']", admin.password);
+    browser.click("[name='remember']");
+    browser.click("form button");
+    browser.waitUntil(() => browser.getSource().includes("Sign out"));
+
+    browser.deleteCookie("_air_key");
+    browser.newWindow("/");
+    assert(browser.getSource().includes("Sign out"));
   });
 });

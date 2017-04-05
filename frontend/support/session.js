@@ -3,10 +3,7 @@ import {admin} from "../config.json"
 export const loginAdmin = () => login(admin);
 
 export const logout = () => {
-  if (browser.isExisting("a*=Sign out")) {
-    browser.click("a*=Sign out");
-    browser.waitUntil(() => browser.getSource().includes("Logged out successfully"));
-  };
+  browser.deleteCookie();
 };
 
 export const login = (user) => {
