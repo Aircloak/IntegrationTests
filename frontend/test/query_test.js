@@ -35,7 +35,6 @@ describe("queries", () => {
       keys("Control").
       keys("Enter").
       keys("Control");
-    browser.click("button*=Run");
 
     browser.waitUntil(() => browser.isExisting(".panel-success"));
     assert(browser.element(".panel-success").isExisting("tr*=hello world"));
