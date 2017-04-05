@@ -33,6 +33,15 @@ describe("managing groups", () => {
     assert.equal(browser.getSource().includes(name), false);
   });
 
+  it("forbids access to data source by default", () => {
+    const {name: userName} = createUser();
+    const {name: groupName} = createGroup();
+
+    showDataSource("nyctaxi");
+    assert.equal(browser.element(".panel*=Users with access").isExisting(`tr*=${userName}`), false)
+    assert.equal(browser.element(".panel*=Groups granting access").isExisting(`tr*=${groupName}`), false)
+  });
+
   it("allowing access to a data source through a group", () => {
     const {name: groupName} = createGroup();
     const {name: userName} = createUser();
