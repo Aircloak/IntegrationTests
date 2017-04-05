@@ -65,7 +65,7 @@ one:
 docker rm -f selenium
 
 # Download and run the debug version mapping the VNC port 5900
-docker run --name selenium -d -p 4444:4444 -p 5900:5900 selenium/standalone-firefox-debug
+docker run --name selenium -d -p 4444:4444 -p 5900:5900 selenium/standalone-chrome-debug
 ```
 
 You will also need to install a VNC viewer. After that just point your viewer to localhost and provide `secret` when
