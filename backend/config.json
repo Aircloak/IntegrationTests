@@ -21,13 +21,13 @@
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT institution, bucket(income by 200 align middle) as income_class, count(*) FROM (SELECT inhaberId, institution, median(monthly_income) as income FROM (SELECT umsatz.inhaberId, left(cast(buchungsDatum as text), 7) as year_month, left(bic, 4) as institution, sum(betrag) as monthly_income FROM umsatz INNER JOIN bankzugang ON umsatz.inhaberId = bankzugang.inhaberId WHERE betrag >= 0 and betrag < 1000000000 GROUP BY umsatz.inhaberId, year_month, institution) as income_by_month GROUP BY inhaberId, institution) as user_incomes GROUP BY institution, income_class HAVING count(*) > 10 ORDER BY institution, income_class",
         "timeout": 30,
-        "expects": [["FIGO", 2500, 26]]
+        "expects": [["FIGO", 2500, 26], ["*", "*", 14]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT bucket(year2016.salary - year2015.salary by 100) as diff, count(*) FROM (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2016-01-01' and buchungsDatum < '2017-01-01' and    buchungstext ilike '%lohn%'  GROUP BY inhaberId) year2016 INNER JOIN (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2015-01-01' and buchungsDatum < '2016-01-01' and  buchungstext ilike '%lohn%' GROUP BY inhaberId) year2015 ON year2016.inhaberId = year2015.inhaberId GROUP BY diff",
         "timeout": 30,
-        "expects": [[36100, 21]]
+        "expects": [[15700, 2], [36100, 21]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
@@ -45,7 +45,7 @@
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT bucket(income by 200 align middle) AS income_class, avg(monthly_savings) FROM (SELECT expenses_by_month.inhaberId, median(monthly_income) AS income,  median(monthly_income) + median(monthly_expenses) AS monthly_savings FROM (SELECT   inhaberId, year(buchungsDatum) AS year, month(buchungsDatum) AS month, sum(betrag) AS monthly_income FROM umsatz WHERE betrag >= 0 AND betrag < 1000000000 GROUP BY inhaberId, year, month) AS income_by_month INNER JOIN (SELECT inhaberId, year(buchungsDatum) AS year, month(buchungsDatum) AS month, sum(betrag) AS monthly_expenses FROM umsatz WHERE betrag >= -1000000000 AND betrag < 0 GROUP BY inhaberId, year, month) AS expenses_by_month ON income_by_month.inhaberId = expenses_by_month.inhaberId AND  income_by_month.year = expenses_by_month.year AND income_by_month.month = expenses_by_month.month GROUP BY expenses_by_month.inhaberId) AS customer_incomes GROUP BY income_class",
         "timeout": 30,
-        "expects": [[2500, -260.122]]
+        "expects": [[2500, -1162.195]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
@@ -133,7 +133,7 @@
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 8 and passenger_count < 10",
         "timeout": 30,
-        "expects": [[36, 262.139, 488.521]]
+        "expects": [[36, 262.127, 488.521]]
       },
       {
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
