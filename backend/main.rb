@@ -126,6 +126,18 @@ def execute_query(url, api_token, datasource, statement, timeout)
   end
 end
 
+def cancel_query(url, api_token, query_id)
+  request = {
+    method: :delete,
+    url: "https://#{url}/api/queries/#{query_id}",
+    #verify_ssl: OpenSSL::SSL::VERIFY_NONE,
+    headers: {
+      'auth-token' => api_token
+    }
+  }
+  RestClient::Request.execute request
+end
+
 # We execute multiple complex queries in parallel in order to try to crash the cloak.
 def load_test_cloak(url, api_token, datasource, statements, timeout)
   puts "Starting load testing on '#{url}' ..."
@@ -152,7 +164,12 @@ def load_test_cloak(url, api_token, datasource, statements, timeout)
   end until query_ids.empty? or duration > timeout
   puts ""
 
-  if duration > timeout then raise "Query timeout (duration exceeded #{timeout} seconds)" end
+  if duration > timeout then
+    puts "Query timeout (duration exceeded #{timeout} seconds). Cancelling queries ..."
+    query_ids.each do |query_id|
+      cancel_query(url, api_token, query_id)
+    end
+  end
   puts "Load testing completed successfully!"
   sleep 30
   return true
