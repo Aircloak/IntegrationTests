@@ -72,7 +72,7 @@ def start_query(url, api_token, datasource, statement)
     },
     payload: body
   }
-  response = RestClient::Request.execute request
+  response = RestClient::Request.execute(request)
   JSON.parse response.body
 end
 
@@ -84,7 +84,7 @@ def get_query(url, api_token, query_id)
       'auth-token' => api_token
     }
   }
-  response = RestClient::Request.execute request
+  response = RestClient::Request.execute(request)
   query = JSON.parse response.body
   query = query["query"]
 end
@@ -131,7 +131,7 @@ def cancel_query(url, api_token, query_id)
       'auth-token' => api_token
     }
   }
-  RestClient::Request.execute request
+  RestClient::Request.execute(request)
 end
 
 # We execute multiple complex queries in parallel in order to try to crash the cloak.
