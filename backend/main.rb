@@ -125,8 +125,8 @@ end
 
 def cancel_query(url, api_token, query_id)
   request = {
-    method: :delete,
-    url: "https://#{url}/api/queries/#{query_id}",
+    method: :post,
+    url: "https://#{url}/api/queries/#{query_id}/cancel",
     headers: {
       'auth-token' => api_token
     }
