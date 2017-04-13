@@ -31,7 +31,6 @@ Content-type: text/html
 Subject: Backend system tests failed :(
 
 <table style="border-collapse: collapse;" cellpadding="4" width="100%">
-#{$errors.join("<tr><td colspan='2'>&nbsp;</td></tr>")}
 </table>
 <br/><hr/>
 https://github.com/Aircloak/IntegrationTests/blob/master/README.md
@@ -67,7 +66,6 @@ def start_query(url, api_token, datasource, statement)
   request = {
     method: :post,
     url: "https://#{url}/api/queries",
-    #verify_ssl: OpenSSL::SSL::VERIFY_NONE,
     headers: {
       'auth-token' => api_token,
       'content-Type' => "application/json"
@@ -82,7 +80,6 @@ def get_query(url, api_token, query_id)
   request = {
     method: :get,
     url: "https://#{url}/api/queries/#{query_id}",
-    #verify_ssl: OpenSSL::SSL::VERIFY_NONE,
     headers: {
       'auth-token' => api_token
     }
@@ -130,7 +127,6 @@ def cancel_query(url, api_token, query_id)
   request = {
     method: :delete,
     url: "https://#{url}/api/queries/#{query_id}",
-    #verify_ssl: OpenSSL::SSL::VERIFY_NONE,
     headers: {
       'auth-token' => api_token
     }
