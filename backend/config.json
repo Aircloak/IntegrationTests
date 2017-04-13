@@ -187,7 +187,7 @@
           "SELECT MAX(trip_distance), MEDIAN(trip_distance) FROM trips",
           "SELECT COUNT(*), AVG(passenger_count), STDDEV(passenger_count), MEDIAN(passenger_count) FROM trips"
         ],
-        "timeout": 9000
+        "timeout": 5400
       }
     }
   ]

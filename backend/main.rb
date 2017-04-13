@@ -31,7 +31,6 @@ Content-type: text/html
 Subject: Backend system tests failed :(
 
 <table style="border-collapse: collapse;" cellpadding="4" width="100%">
-#{$errors.join("<tr><td colspan='2'>&nbsp;</td></tr>")}
 </table>
 <br/><hr/>
 https://github.com/Aircloak/IntegrationTests/blob/master/README.md
@@ -39,7 +38,7 @@ ENDOFMESSAGE
 end
 
 def test_cloak(url, api_token, tests)
-  puts "Running tests on '#{url}' ..."
+  puts("Running tests on '#{url}' ...")
   tests.each do |test|
     test["datasources"].each do |datasource|
       run_test(url, api_token, datasource, test)
@@ -53,8 +52,8 @@ def run_test(url, api_token, datasource, test)
   if result != test["expects"] then raise "Expected: #{test["expects"]}, got: #{result}" end
 rescue => error
   store_error(url, datasource, test["query"], error)
-  puts " failed: #{error}."
-  puts "Backtrace:\n\t#{error.backtrace.join("\n\t")}"
+  puts(" failed: #{error}.")
+  puts("Backtrace:\n\t#{error.backtrace.join("\n\t")}")
 end
 
 def start_query(url, api_token, datasource, statement)
@@ -67,14 +66,13 @@ def start_query(url, api_token, datasource, statement)
   request = {
     method: :post,
     url: "https://#{url}/api/queries",
-    #verify_ssl: OpenSSL::SSL::VERIFY_NONE,
     headers: {
       'auth-token' => api_token,
       'content-Type' => "application/json"
     },
     payload: body
   }
-  response = RestClient::Request.execute request
+  response = RestClient::Request.execute(request)
   JSON.parse response.body
 end
 
@@ -82,12 +80,11 @@ def get_query(url, api_token, query_id)
   request = {
     method: :get,
     url: "https://#{url}/api/queries/#{query_id}",
-    #verify_ssl: OpenSSL::SSL::VERIFY_NONE,
     headers: {
       'auth-token' => api_token
     }
   }
-  response = RestClient::Request.execute request
+  response = RestClient::Request.execute(request)
   query = JSON.parse response.body
   query = query["query"]
 end
@@ -113,7 +110,7 @@ def execute_query(url, api_token, datasource, statement, timeout)
   if query["error"] then raise query["error"] end
   # Note: This log line is used by the perf.rb script to extract timing information.
   # If you modify it, you must update the parsing code in that file also.
-  puts " completed in #{duration} seconds."
+  puts(" completed in #{duration} seconds.")
 
   query["rows"].map do |row|
     row["row"].map do |value|
@@ -126,19 +123,30 @@ def execute_query(url, api_token, datasource, statement, timeout)
   end
 end
 
+def cancel_query(url, api_token, query_id)
+  request = {
+    method: :post,
+    url: "https://#{url}/api/queries/#{query_id}/cancel",
+    headers: {
+      'auth-token' => api_token
+    }
+  }
+  RestClient::Request.execute(request)
+end
+
 # We execute multiple complex queries in parallel in order to try to crash the cloak.
 def load_test_cloak(url, api_token, datasource, statements, timeout)
-  puts "Starting load testing on '#{url}' ..."
+  puts("Starting load testing on '#{url}' ...")
 
   start_time = Time.now
   query_ids = statements.map do |statement|
-    puts "Starting query '#{statement}' on '#{datasource}' ..."
+    puts("Starting query '#{statement}' on '#{datasource}' ...")
     query = start_query(url, api_token, datasource, statement)
     if !query["success"] then raise "Failed to start query" end
     query["query_id"]
   end
 
-  puts "Waiting for load tests to complete ..."
+  puts("Waiting for load tests to complete ...")
 
   duration = 0
   begin
@@ -150,16 +158,21 @@ def load_test_cloak(url, api_token, datasource, statements, timeout)
     end
     duration = (Time.now - start_time).round()
   end until query_ids.empty? or duration > timeout
-  puts ""
+  puts("")
 
-  if duration > timeout then raise "Query timeout (duration exceeded #{timeout} seconds)" end
-  puts "Load testing completed successfully!"
+  if duration > timeout then
+    puts("Query timeout (duration exceeded #{timeout} seconds). Cancelling queries ...")
+    query_ids.each do |query_id|
+      cancel_query(url, api_token, query_id)
+    end
+  end
+  puts("Load testing completed successfully!")
   sleep 30
   return true
 rescue => error
   store_error(url, datasource, "<LOAD TESTING QUERIES>", error)
-  puts "Load testing failed: #{error}."
-  puts "Backtrace:\n\t#{error.backtrace.join("\n\t")}"
+  puts("Load testing failed: #{error}.")
+  puts("Backtrace:\n\t#{error.backtrace.join("\n\t")}")
   return false
 end
 
@@ -173,7 +186,7 @@ $stdout.sync = true # do not buffer output
 config_file = if ARGV.length == 0 then File.dirname(__FILE__) + '/config.json' else ARGV[0] end
 
 time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
-puts "Integration tests started at #{time}, using settings from '#{config_file}'."
+puts("Integration tests started at #{time}, using settings from '#{config_file}'.")
 
 file = File.read(config_file)
 config = JSON.parse(file)
@@ -192,6 +205,6 @@ if not $errors.empty? then
   message = format_mail(config["email_from"], config["email_to"])
   Net::SMTP.start(config["email_server"], config["email_port"]) do |smtp|
     smtp.send_message message, config["email_from"], config["email_to"]
-    puts "Notification email sent!"
+    puts("Notification email sent!")
   end
 end
