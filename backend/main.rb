@@ -31,6 +31,7 @@ Content-type: text/html
 Subject: Backend system tests failed :(
 
 <table style="border-collapse: collapse;" cellpadding="4" width="100%">
+#{$errors.join("<tr><td colspan='2'>&nbsp;</td></tr>")}
 </table>
 <br/><hr/>
 https://github.com/Aircloak/IntegrationTests/blob/master/README.md
