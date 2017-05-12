@@ -10,6 +10,7 @@ describe("queries", () => {
 
     const user = createUser();
     allowDataSource(user, "games");
+    allowDataSource(user, "nyctaxi");
 
     login(user);
   });
@@ -41,13 +42,13 @@ describe("queries", () => {
   });
 
   it("allows cancelling a query", () => {
-    queryDataSource("games");
+    queryDataSource("nyctaxi");
 
     browser.element("#sql-editor").
       keys("Control").
       keys("a").
       keys("Control").
-      keys("SELECT COUNT(*) FROM GAMES CROSS JOIN GAMES");
+      keys("SELECT COUNT(*) FROM trips");
     browser.click("button*=Run");
 
     browser.waitUntil(() => browser.getSource().includes("Cancel"));
