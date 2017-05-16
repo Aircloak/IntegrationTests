@@ -57,7 +57,7 @@
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT left(cast(buchungsDatum as text), 7) as month, extract_match(verwendungszweck, 'Aldi|Edeka|Rewe|Amazon|IKEA') as shop, avg(betrag), min(betrag), max(betrag), count(*) FROM umsatz GROUP BY month, shop HAVING avg(betrag) > 400 ORDER BY month desc, shop asc",
         "timeout": 30,
-        "expects": [["2016-05", null, 456.385, -753.2, 5250.0, 391], ["2016-02", null, 651.323, -1200, 5250.0, 1345]]
+        "expects": [["2016-05", null, 456.042, -753.2, 5250.0, 399], ["2016-02", null, 651.779, -1200, 5250.0, 1298]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
@@ -157,7 +157,7 @@
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs >= 0 and trip_time_in_secs < 50",
         "timeout": 900,
-        "expects": [[0, 9, 1, 1343357]]
+        "expects": [[0, 9, 1, 1343232]]
       }
     ],
     "medical database": [
