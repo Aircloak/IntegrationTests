@@ -27,6 +27,7 @@ describe("managing groups", () => {
 
     browser.url("/admin/groups");
     browser.element(`tr*=${name}`).click("a*=Delete");
+    browser.alertAccept();
     browser.waitUntil(() => browser.getSource().includes("Group deleted"));
 
     browser.url("/admin/groups");
