@@ -9,13 +9,13 @@
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT EXTRACT_MATCHES(verwendungszweck, '\\w+') as word, count(*) FROM umsatz GROUP BY word HAVING count(*) > 1000 ORDER BY count(*) DESC",
         "timeout": 30,
-        "expects": [["Ec", 1632]]
+        "expects": [["Ec", 1597]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT left(cast(buchungsDatum as text), 7) as month, extract_match(buchungstext, 'EC|Visa|Maestro|Master') as card, count(*) FROM umsatz GROUP BY month, card HAVING count(*) > 1024",
         "timeout": 30,
-        "expects": [["2016-03", null, 1130]]
+        "expects": [["2016-03", null, 1113]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
@@ -27,31 +27,31 @@
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT bucket(year2016.salary - year2015.salary by 100) as diff, count(*) FROM (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2016-01-01' and buchungsDatum < '2017-01-01' and    buchungstext ilike '%lohn%'  GROUP BY inhaberId) year2016 INNER JOIN (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2015-01-01' and buchungsDatum < '2016-01-01' and  buchungstext ilike '%lohn%' GROUP BY inhaberId) year2015 ON year2016.inhaberId = year2015.inhaberId GROUP BY diff",
         "timeout": 30,
-        "expects": [[36100, 20]]
+        "expects": [["*", 2], [15700, 2], [36100, 32]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT year(buchungsDatum) as year, month(buchungsDatum) as month, AVG(betrag), STDDEV(betrag), MEDIAN(betrag) FROM umsatz WHERE buchungstext ILIKE '%lohn%' GROUP BY year, month HAVING avg(betrag) > 4000 ORDER BY year DESC, month DESC",
         "timeout": 30,
-        "expects": [[2016, 5, 4396.647, 1258.361, 5250.0], [2016, 2, 5148.146, 606.006, 5250.0]]
+        "expects": [[2016, 5, 4364.635, 1250.743, 5250.0], [2016, 2, 5144.661, 608.823, 5250.0]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT EXTRACT_MATCHES(concat(concat(verwendungszweck, ' '), buchungstext), '\\w{4,}') as word, count(*) FROM umsatz WHERE verwendungszweck ILIKE '%zahlung%' GROUP BY word HAVING count(*) > 100 ORDER BY count(*) DESC LIMIT 10",
         "timeout": 30,
-        "expects": [["477771", 128], ["Zahlung", 128]]
+        "expects": [["477771", 132], ["Zahlung", 132]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT bucket(income by 200 align middle) AS income_class, avg(monthly_savings) FROM (SELECT expenses_by_month.inhaberId, median(monthly_income) AS income,  median(monthly_income) + median(monthly_expenses) AS monthly_savings FROM (SELECT   inhaberId, year(buchungsDatum) AS year, month(buchungsDatum) AS month, sum(betrag) AS monthly_income FROM umsatz WHERE betrag >= 0 AND betrag < 1000000000 GROUP BY inhaberId, year, month) AS income_by_month INNER JOIN (SELECT inhaberId, year(buchungsDatum) AS year, month(buchungsDatum) AS month, sum(betrag) AS monthly_expenses FROM umsatz WHERE betrag >= -1000000000 AND betrag < 0 GROUP BY inhaberId, year, month) AS expenses_by_month ON income_by_month.inhaberId = expenses_by_month.inhaberId AND  income_by_month.year = expenses_by_month.year AND income_by_month.month = expenses_by_month.month GROUP BY expenses_by_month.inhaberId) AS customer_incomes GROUP BY income_class",
         "timeout": 30,
-        "expects": [[2500, -1510.787]]
+        "expects": [["*", 1509.518], [2300, 22.656], [2500, -1332.009]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT extract_match(verwendungszweck, 'Aldi|Edeka|Rewe|IKEA|Amazon') as shop, bucket(income by 200 align middle) as income_class, count(*) FROM (SELECT inhaberId, median(monthly_income) as income FROM (SELECT inhaberId, left(cast(buchungsDatum as text), 7) as year_month, sum(betrag) as monthly_income FROM umsatz WHERE betrag >= 0 and betrag < 1000000000 GROUP BY inhaberId, year_month) as income_by_month GROUP BY inhaberId) customer_incomes INNER JOIN umsatz ON umsatz.inhaberId = customer_incomes.inhaberId GROUP BY income_class, shop HAVING count(*) > 3000 ORDER BY shop ASC, income_class ASC",
         "timeout": 30,
-        "expects": [[null, 2500, 4073]]
+        "expects": [[null, 2500, 3543]]
       },
       {
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
@@ -63,7 +63,7 @@
         "datasources": ["aircloak/teambank_konto_service@acmongo"],
         "query": "SELECT bucket(income by 200 align middle) as income_class, count(*) FROM (SELECT inhaberId, median(monthly_income) as income FROM (SELECT inhaberId, left(cast(buchungsDatum as text), 7) as year_month, sum(betrag) as monthly_income FROM umsatz WHERE betrag >= 0 and betrag < 1000000000 GROUP BY inhaberId, year_month) as income_by_month GROUP BY inhaberId) as user_incomes GROUP BY income_class",
         "timeout": 30,
-        "expects": [[300, 9], [2500, 28]]
+        "expects": [["*", 5], [300.0, 13], [2300, 2], [2500, 28]]
       }
     ],
     "games and players": [
@@ -85,7 +85,7 @@
         ],
         "query": "SELECT SUM(winpoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age > 0 and age < 18",
         "timeout": 30,
-        "expects": [[49897]]
+        "expects": [[50598]]
       },
       {
         "datasources": [
@@ -133,31 +133,31 @@
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 8 and passenger_count < 10",
         "timeout": 30,
-        "expects": [[32, 318.128, 521.845]]
+        "expects":  [[37, 374.883, 528.639]]
       },
       {
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT passenger_count AS pc, COUNT(*) FROM trips WHERE passenger_count IN (7,8,9,10) GROUP BY pc ORDER BY pc",
         "timeout": 30,
-        "expects": [[7, 26], [8, 16], [9, 18]]
+        "expects":  [[7, 6], [8, 14], [9, 28]]
       },
       {
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT COUNT(DISTINCT passenger_count) FROM trips WHERE trip_time_in_secs > 5000 and trip_time_in_secs < 10000",
         "timeout": 600,
-        "expects": [[9]]
+        "expects": [[8]]
       },
       {
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 and trip_time_in_secs < 5000 AND passenger_count <> 4",
         "timeout": 900,
-        "expects": [[2721090]]
+        "expects": [[2719132]]
       },
       {
         "datasources": ["nyctaxi/nyctaxi@stage-airdb.mpi-sws.org"],
         "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs >= 0 and trip_time_in_secs < 50",
         "timeout": 900,
-        "expects": [[0, 9, 1, 1343232]]
+        "expects": [[0, 9, 1, 1344049]]
       }
     ],
     "medical database": [
@@ -165,7 +165,7 @@
         "datasources": ["aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org"],
         "query": "SELECT COUNT(*) FROM patients",
         "timeout": 30,
-        "expects": [[11251]]
+        "expects": [[11253]]
       },
       {
         "datasources": ["aircloak1/Kia_Clinic@srv-51-42.mpi-sws.org"],
