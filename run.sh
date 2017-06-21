@@ -31,7 +31,10 @@ export http_proxy=""
 LOG="./logs/`date +%F.log`"
 
 # execute backend system tests
-./backend/main.rb 2>&1 | tee -a "$LOG"
+cd backend
+bundle install
+cd ..
+./backend/main.rb real 2>&1 | tee -a "$LOG"
 
 # execute browser tests
 ./frontend/run.sh
