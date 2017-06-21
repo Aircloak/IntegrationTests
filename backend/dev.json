@@ -5,8 +5,7 @@
       {
         "datasources": ["cloak/cloak-native@localhost"],
         "query": "SELECT COUNT(*) FROM purchases",
-        "timeout": 30,
-        "expects": [["Ec", 1696]]
+        "timeout": 30
       }
     ]
   },
