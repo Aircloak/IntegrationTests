@@ -206,8 +206,12 @@ end
 
 if not $errors.empty? then
   message = format_mail(config["email_from"], config["email_to"])
-  Net::SMTP.start(config["email_server"], config["email_port"]) do |smtp|
-    smtp.send_message message, config["email_from"], config["email_to"]
-    puts("Notification email sent!")
+  if config["email_server"] then
+    Net::SMTP.start(config["email_server"], config["email_port"]) do |smtp|
+      smtp.send_message message, config["email_from"], config["email_to"]
+      puts("Notification email sent!")
+    end
+  else
+    puts message
   end
 end
