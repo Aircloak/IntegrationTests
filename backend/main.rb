@@ -67,7 +67,7 @@ def start_query(url, api_token, datasource, statement)
   }.to_json
   request = {
     method: :post,
-    url: "https://#{url}/api/queries",
+    url: "#{url}/api/queries",
     headers: {
       'auth-token' => api_token,
       'content-Type' => "application/json"
@@ -81,7 +81,7 @@ end
 def get_query(url, api_token, query_id)
   request = {
     method: :get,
-    url: "https://#{url}/api/queries/#{query_id}",
+    url: "#{url}/api/queries/#{query_id}",
     headers: {
       'auth-token' => api_token
     }
@@ -128,7 +128,7 @@ end
 def cancel_query(url, api_token, query_id)
   request = {
     method: :post,
-    url: "https://#{url}/api/queries/#{query_id}/cancel",
+    url: "#{url}/api/queries/#{query_id}/cancel",
     headers: {
       'auth-token' => api_token
     }
