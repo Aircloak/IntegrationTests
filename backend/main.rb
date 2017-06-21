@@ -152,7 +152,7 @@ def load_test_cloak(url, api_token, datasource, statements, timeout)
 
   duration = 0
   begin
-    sleep 30
+    sleep $sleep
     print "."
     query_ids.reject! do |query_id|
       query = get_query(url, api_token, query_id) # get current state
@@ -169,7 +169,7 @@ def load_test_cloak(url, api_token, datasource, statements, timeout)
     end
   end
   puts("Load testing completed successfully!")
-  sleep 30
+  sleep $sleep
   return true
 rescue => error
   store_error(url, datasource, "<LOAD TESTING QUERIES>", error)
@@ -192,6 +192,7 @@ puts("Integration tests started at #{time}, using settings from '#{config_file}'
 
 file = File.read(config_file)
 config = JSON.parse(file)
+$sleep = config["sleep"]
 
 config["cloaks"].each do |cloak|
   load_test = cloak["load_testing"]
