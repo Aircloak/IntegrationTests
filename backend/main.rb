@@ -3,6 +3,7 @@
 # Backend system tests
 
 require "rubygems"
+require "bundler/setup"
 require "json"
 require 'rest_client'
 require 'net/smtp'
