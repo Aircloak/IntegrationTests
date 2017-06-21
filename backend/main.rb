@@ -3,6 +3,7 @@
 # Backend system tests
 
 require "rubygems"
+require "bundler/setup"
 require "json"
 require 'rest_client'
 require 'net/smtp'
@@ -50,7 +51,6 @@ end
 def run_test(url, api_token, datasource, test)
   print "Executing query '#{test["query"]}' on '#{datasource} [#{url}]' "
   result = execute_query(url, api_token, datasource, test["query"], test["timeout"])
-  if result != test["expects"] then raise "Expected: #{test["expects"]}, got: #{result}" end
 rescue => error
   store_error(url, datasource, test["query"], error)
   puts(" failed: #{error}.")
@@ -66,7 +66,7 @@ def start_query(url, api_token, datasource, statement)
   }.to_json
   request = {
     method: :post,
-    url: "https://#{url}/api/queries",
+    url: "#{url}/api/queries",
     headers: {
       'auth-token' => api_token,
       'content-Type' => "application/json"
@@ -80,7 +80,7 @@ end
 def get_query(url, api_token, query_id)
   request = {
     method: :get,
-    url: "https://#{url}/api/queries/#{query_id}",
+    url: "#{url}/api/queries/#{query_id}",
     headers: {
       'auth-token' => api_token
     }
@@ -127,7 +127,7 @@ end
 def cancel_query(url, api_token, query_id)
   request = {
     method: :post,
-    url: "https://#{url}/api/queries/#{query_id}/cancel",
+    url: "#{url}/api/queries/#{query_id}/cancel",
     headers: {
       'auth-token' => api_token
     }
@@ -151,7 +151,7 @@ def load_test_cloak(url, api_token, datasource, statements, timeout)
 
   duration = 0
   begin
-    sleep 30
+    sleep $sleep
     print "."
     query_ids.reject! do |query_id|
       query = get_query(url, api_token, query_id) # get current state
@@ -168,7 +168,7 @@ def load_test_cloak(url, api_token, datasource, statements, timeout)
     end
   end
   puts("Load testing completed successfully!")
-  sleep 30
+  sleep $sleep
   return true
 rescue => error
   store_error(url, datasource, "<LOAD TESTING QUERIES>", error)
@@ -184,13 +184,18 @@ end
 
 $stdout.sync = true # do not buffer output
 
-config_file = if ARGV.length == 0 then File.dirname(__FILE__) + '/config.json' else ARGV[0] end
+if ARGV.length == 0 then
+  puts "Missing configuration name!"
+  exit 1
+end
+config_file = "#{File.dirname(__FILE__)}/#{ARGV[0]}.json"
 
 time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
 puts("Integration tests started at #{time}, using settings from '#{config_file}'.")
 
 file = File.read(config_file)
 config = JSON.parse(file)
+$sleep = config["sleep"]
 
 config["cloaks"].each do |cloak|
   load_test = cloak["load_testing"]
@@ -204,8 +209,12 @@ end
 
 if not $errors.empty? then
   message = format_mail(config["email_from"], config["email_to"])
-  Net::SMTP.start(config["email_server"], config["email_port"]) do |smtp|
-    smtp.send_message message, config["email_from"], config["email_to"]
-    puts("Notification email sent!")
+  if config["email_server"] then
+    Net::SMTP.start(config["email_server"], config["email_port"]) do |smtp|
+      smtp.send_message message, config["email_from"], config["email_to"]
+      puts("Notification email sent!")
+    end
+  else
+    puts message
   end
 end

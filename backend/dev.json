@@ -1,0 +1,26 @@
+{
+  "sleep": 1,
+  "tests": {
+    "local": [
+      {
+        "datasources": ["cloak/cloak-native@localhost"],
+        "query": "SELECT COUNT(*) FROM purchases",
+        "timeout": 30
+      }
+    ]
+  },
+  "cloaks": [
+    {
+      "url": "http://localhost:8080",
+      "token": "dev-admin",
+      "tests": ["local"],
+      "load_testing": {
+        "datasource": "cloak/cloak-native@localhost",
+        "queries": [
+          "SELECT COUNT(*) FROM purchases"
+        ],
+        "timeout": 10
+      }
+    }
+  ]
+}

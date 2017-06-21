@@ -26,6 +26,15 @@ If errors are encountered, a notification email is sent to the address specified
 __NOTE__: Because of the way queries are executed (polling is used to wait for a query to complete),
 timing information is accurate only within 1% of the test timeout value or 2 seconds, whichever is greater.
 
+#### Running locally
+
+It is possible to run a brief local test on a developer's machine. This is useful if you're making some changes to the script, and you want to quickly test the logic. To run a local test, you can do the following:
+
+- start your local air and cloak in dev mode
+- change to the `backend` folder
+- run `bundle install`
+- run `ruby main.rb dev`
+
 ### Frontend tests
 
 The tests driving the system through the frontend are contained in the `/frontend` directory. The deployed version can
