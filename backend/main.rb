@@ -184,7 +184,11 @@ end
 
 $stdout.sync = true # do not buffer output
 
-config_file = if ARGV.length == 0 then File.dirname(__FILE__) + '/config.json' else ARGV[0] end
+if ARGV.length == 0 then
+  puts "Missing configuration name!"
+  exit 1
+end
+config_file = "#{File.dirname(__FILE__)}/#{ARGV[0]}.json"
 
 time = Time.now.strftime("%Y/%m/%d %H:%M:%S")
 puts("Integration tests started at #{time}, using settings from '#{config_file}'.")
