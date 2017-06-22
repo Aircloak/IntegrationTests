@@ -181,7 +181,7 @@
       "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNGFiMDc5YTctYjM1ZS00NDgyLWFlZjAtNzRhMmY2ZTM3MmZlZAAGc2lnbmVkbgYAab6qmVcB.T_j5M5Kix3k2wLo8qefhC9EcqQ0UEddkjbpOpvD5zY0",
       "tests": ["teambank", "games and players", "nyctaxi", "medical database"],
       "load_testing": {
-        "datasource": "nyctaxi/nyctaxi@stage-airdb.mpi-sws.org",
+        "datasource": "nyctaxi",
         "queries": [
           "SELECT COUNT(DISTINCT trip_time_in_secs), MEDIAN(trip_time_in_secs) FROM trips",
           "SELECT MAX(trip_distance), MEDIAN(trip_distance) FROM trips",
