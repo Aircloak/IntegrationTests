@@ -61,7 +61,7 @@ def start_query(url, api_token, datasource, statement)
   body = {
     query: {
       statement: statement,
-      data_source_token: datasource
+      data_source_name: datasource
     }
   }.to_json
   request = {
