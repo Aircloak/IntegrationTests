@@ -64,6 +64,18 @@
         "query": "SELECT bucket(income by 200 align middle) as income_class, count(*) FROM (SELECT inhaberId, median(monthly_income) as income FROM (SELECT inhaberId, left(cast(buchungsDatum as text), 7) as year_month, sum(betrag) as monthly_income FROM umsatz WHERE betrag >= 0 and betrag < 1000000000 GROUP BY inhaberId, year_month) as income_by_month GROUP BY inhaberId) as user_incomes GROUP BY income_class",
         "timeout": 30,
         "expects": [["*", 7], [300.0, 10], [2300, 2], [2500, 31]]
+      },
+      {
+        "datasources": ["teambank_mongo32", "teambank_mongo34"],
+        "query": "SELECT extract_match(verwendungszweck, 'aldi|rewe|edeka|lidl') as shop, count(*) FROM (SELECT inhaberId FROM bankzugang WHERE bankname = 'figo Demobank' GROUP BY inhaberId) fake_users INNER JOIN umsatz ON fake_users.inhaberId = umsatz.inhaberId GROUP BY shop ORDER BY count(*) DESC",
+        "timeout": 30,
+        "expects": [[null, 5291], ["Aldi", 313]]
+      },
+      {
+        "datasources": ["teambank_mongo32", "teambank_mongo34"],
+        "query": "SELECT EXTRACT_MATCHES(w1, '\\w+'), count(*) AS count FROM (SELECT inhaberId, verwendungszweck as w1 FROM umsatz) as umsatz INNER JOIN bankzugang ON umsatz.inhaberId = bankzugang.inhaberId GROUP BY 1 HAVING count BETWEEN 500 AND 600 ORDER BY count",
+        "timeout": 30,
+        "expects": [["11", 512], ["End", 521], ["Miete", 596]]
       }
     ],
     "games and players": [
