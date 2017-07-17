@@ -76,6 +76,12 @@
         "query": "SELECT EXTRACT_MATCHES(w1, '\\w+'), count(*) AS count FROM (SELECT inhaberId, verwendungszweck as w1 FROM umsatz) as umsatz INNER JOIN bankzugang ON umsatz.inhaberId = bankzugang.inhaberId GROUP BY 1 HAVING count BETWEEN 500 AND 600 ORDER BY count",
         "timeout": 30,
         "expects": [["11", 512], ["End", 521], ["Miete", 596]]
+      },
+      {
+        "datasources": ["teambank_mongo32", "teambank_mongo34"],
+        "query": "SELECT min(pos_betrag) FROM (SELECT inhaberId, verwendungszweck, abs(betrag) as pos_betrag FROM umsatz WHERE betrag >= -100000 and betrag < 0) as umsatz INNER JOIN (  SELECT inhaberId, bankname FROM bankzugang GROUP BY inhaberId, bankname) bankzugang ON bankzugang.inhaberId = umsatz.inhaberId WHERE bankname ilike '%Deutsche Kreditbank Berlin%'",
+        "timeout": 30,
+        "expects": [[0]]
       }
     ],
     "games and players": [
