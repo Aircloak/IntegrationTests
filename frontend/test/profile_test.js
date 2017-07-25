@@ -16,7 +16,7 @@ describe("profile page", () => {
     browser.setValue("#user_old_password", user.password);
     browser.setValue("#user_password", newPassword);
     browser.setValue("#user_password_confirmation", newPassword);
-    browser.element(".panel*=Change password").click("input[value='Save']");
+    browser.element(".panel*=Change password").click("button*=Save");
     browser.waitUntil(() => browser.getSource().includes("Password changed"));
 
     logout()
