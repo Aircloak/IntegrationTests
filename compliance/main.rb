@@ -13,7 +13,8 @@ require 'net/smtp'
 # -------------------------------------------------------------------
 
 def check_query(query, air, api_token, datasources)
-  partitions = execute_query(air, api_token, datasources, query, 30).group_by {|result| result["rows"]}
+  partitions = query_datasources(air, api_token, datasources, query, 30)
+    .group_by {|result| result["rows"]}
   if partitions.length == 1 then
     {success: true}
   else

@@ -36,7 +36,12 @@ def get_query(url, api_token, query_id)
   query = query["query"]
 end
 
-def execute_query(url, api_token, datasources, statement, timeout)
+def execute_query(url, api_token, datasource, statement, timeout)
+  results = query_datasources(url, api_token, [datasource], statement, timeout)
+  results.first["rows"]
+end
+
+def query_datasources(url, api_token, datasources, statement, timeout)
   start_time = Time.now
   print "."
 

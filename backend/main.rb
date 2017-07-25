@@ -49,8 +49,7 @@ end
 
 def run_test(url, api_token, datasource, test)
   print "Executing query '#{test["query"]}' on '#{datasource} [#{url}]' "
-  results = execute_query(url, api_token, [datasource], test["query"], test["timeout"])
-  result = results.first["rows"]
+  result = execute_query(url, api_token, datasource, test["query"], test["timeout"])
   if result != test["expects"] then raise "Expected: #{test["expects"]}, got: #{result}" end
 rescue => error
   store_error(url, datasource, test["query"], error)
