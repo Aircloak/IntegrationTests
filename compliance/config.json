@@ -1,0 +1,14 @@
+{
+  "email_to": "everyone-dev@aircloak.com",
+  "email_from": "everyone-dev@aircloak.com",
+  "email_server": "localhost",
+  "email_port": 25,
+  "air": {
+    "url": "nightly-air.aircloak.com",
+    "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNGFiMDc5YTctYjM1ZS00NDgyLWFlZjAtNzRhMmY2ZTM3MmZlZAAGc2lnbmVkbgYAab6qmVcB.T_j5M5Kix3k2wLo8qefhC9EcqQ0UEddkjbpOpvD5zY0"
+  },
+  "datasources": [
+    "compliance_encoded",
+    "compliance_normal"
+  ]
+}

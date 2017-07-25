@@ -8,7 +8,7 @@ require 'rest_client'
 require 'net/smtp'
 require 'date'
 require 'cgi'
-
+require '../common/query_runner.rb'
 $errors = []
 
 def store_error(url, datasource, statement, error)
@@ -55,73 +55,6 @@ rescue => error
   store_error(url, datasource, test["query"], error)
   puts(" failed: #{error}.")
   puts("Backtrace:\n\t#{error.backtrace.join("\n\t")}")
-end
-
-def start_query(url, api_token, datasource, statement)
-  body = {
-    query: {
-      statement: statement,
-      data_source_name: datasource
-    }
-  }.to_json
-  request = {
-    method: :post,
-    url: "https://#{url}/api/queries",
-    headers: {
-      'auth-token' => api_token,
-      'content-Type' => "application/json"
-    },
-    payload: body
-  }
-  response = RestClient::Request.execute(request)
-  JSON.parse response.body
-end
-
-def get_query(url, api_token, query_id)
-  request = {
-    method: :get,
-    url: "https://#{url}/api/queries/#{query_id}",
-    headers: {
-      'auth-token' => api_token
-    }
-  }
-  response = RestClient::Request.execute(request)
-  query = JSON.parse response.body
-  query = query["query"]
-end
-
-def execute_query(url, api_token, datasource, statement, timeout)
-  start_time = Time.now
-  print "."
-  query = start_query(url, api_token, datasource, statement)
-  if !query["success"] then raise "Failed to start query" end
-  query_id = query["query_id"]
-
-  poll_interval = [(timeout / 100).round(), 2].max()
-  progress = duration = 0
-  begin
-    sleep poll_interval
-    progress += 1
-    if progress % 5 == 0 then print "." end
-    query = get_query(url, api_token, query_id) # get current state
-    duration = (Time.now - start_time).round()
-  end until query["completed"] or duration > timeout
-
-  if duration > timeout then raise "Query timeout (duration exceeded #{timeout} seconds)" end
-  if query["error"] then raise query["error"] end
-  # Note: This log line is used by the perf.rb script to extract timing information.
-  # If you modify it, you must update the parsing code in that file also.
-  puts(" completed in #{duration} seconds.")
-
-  query["rows"].map do |row|
-    row["row"].map do |value|
-      if value.is_a?(Float) then
-        (value * 1000).round() / 1000.0 # keep 3 decimals at most (just like the UI)
-      else
-        value
-      end
-    end
-  end
 end
 
 def cancel_query(url, api_token, query_id)
