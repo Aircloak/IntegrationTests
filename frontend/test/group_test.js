@@ -14,7 +14,7 @@ describe("managing groups", () => {
 
     browser.url("/admin/groups");
     browser.setValue("#group_name", name);
-    browser.click("input[value='Add group']");
+    browser.click("button*=Add group");
 
     browser.waitUntil(() => browser.getSource().includes("Group created"));
     assert(browser.isExisting(`h2*=Edit ${name}`));
@@ -50,7 +50,7 @@ describe("managing groups", () => {
     editGroup(groupName);
     browser.element(`tr*=${userName}`).click("input[type='checkbox']");
     browser.element("tr*=nyctaxi").click("input[type='checkbox']");
-    browser.click("input[value='Update group']");
+    browser.click("button*=Update group");
     browser.waitUntil(() => browser.getSource().includes("Group updated"));
 
     showDataSource("nyctaxi");

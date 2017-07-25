@@ -19,7 +19,7 @@ describe("managing users", () => {
     browser.setValue("#user_name", name);
     browser.setValue("#user_password", password);
     browser.setValue("#user_password_confirmation", password);
-    browser.click("input[value='Save']");
+    browser.click("button*=Save");
 
     browser.waitUntil(() => browser.isExisting(".alert-info*=User created"));
     assert(browser.getSource().includes(name));
@@ -33,7 +33,7 @@ describe("managing users", () => {
     browser.waitUntil(() => browser.getSource().includes("New user"));
 
     browser.setValue("#user_name", name);
-    browser.click("input[value='Save']");
+    browser.click("button*=Save");
 
     browser.waitUntil(() => browser.getSource().includes("Please check the errors below"));
     assert(browser.getSource().includes("can't be blank"));

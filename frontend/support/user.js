@@ -13,7 +13,7 @@ export const createUser = () => {
   browser.setValue("#user_name", name);
   browser.setValue("#user_password", password);
   browser.setValue("#user_password_confirmation", password);
-  browser.click("input[value='Save']");
+  browser.click("button*=Save");
 
   browser.waitUntil(() => browser.isExisting(".alert-info*=User created"));
 

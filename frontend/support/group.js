@@ -5,7 +5,7 @@ export const createGroup = () => {
 
   browser.url("/admin/groups");
   browser.setValue("#group_name", name);
-  browser.click("input[value='Add group']");
+  browser.click("button*=Add group");
   browser.waitUntil(() => browser.getSource().includes("Group created"));
 
   return {name};
