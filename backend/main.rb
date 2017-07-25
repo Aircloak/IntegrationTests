@@ -8,7 +8,7 @@ require 'rest_client'
 require 'net/smtp'
 require 'date'
 require 'cgi'
-
+require '../common/query_runner.rb'
 $errors = []
 
 def store_error(url, datasource, statement, error)
