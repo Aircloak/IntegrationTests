@@ -1,0 +1,3 @@
+SELECT floor(3.22)
+FROM users
+GROUP BY 1
