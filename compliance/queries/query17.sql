@@ -1,0 +1,1 @@
+SHOW columns FROM addresses

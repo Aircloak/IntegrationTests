@@ -1,0 +1,3 @@
+SELECT
+  age,
+FROM users

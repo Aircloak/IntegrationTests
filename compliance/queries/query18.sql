@@ -1,0 +1,1 @@
+SHOW COLUMNS FROM drafts_changes
