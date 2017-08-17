@@ -57,7 +57,7 @@ def query_datasources(url, api_token, datasources, statement, timeout)
 
   completed_queries = []
 
-  poll_interval = [(timeout / 100).round(), 2].max()
+  poll_interval = [(timeout / 100).round(), 0.5].max()
   progress = duration = 0
   begin
     sleep poll_interval
