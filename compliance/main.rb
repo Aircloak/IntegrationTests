@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require '../common/query_runner.rb'
+require './common/query_runner.rb'
 require 'json'
 require 'yaml'
 require 'cgi'
