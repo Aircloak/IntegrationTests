@@ -1,0 +1,136 @@
+---
+counts:
+- addresses: |-
+    SELECT
+      count(*), count_noise(*),
+      count(distinct uid), count_noise(distinct uid),
+      count(distinct home.city), count_noise(distinct home.city)
+    FROM addresses
+- drafts_changes: |-
+    SELECT
+      count(*), count_noise(*),
+      count(distinct uid), count_noise(distinct uid),
+      count(distinct changes.date), count_noise(distinct changes.date)
+    FROM drafts_changes
+- notes: |-
+    SELECT
+      count(*), count_noise(*),
+      count(distinct uid), count_noise(distinct uid),
+      count(distinct title), count_noise(distinct title)
+    FROM notes
+- users: |-
+    SELECT
+      count(*), count_noise(*),
+      count(distinct id), count_noise(distinct id),
+      count(distinct age), count_noise(distinct age)
+    FROM users
+
+max(value):
+- addresses: |-
+    SELECT
+      max(home.postal_code),
+      max(distinct home.postal_code)
+    FROM addresses
+- drafts_changes: |-
+    SELECT
+      max(note_id),
+      max(distinct note_id)
+    FROM drafts_changes
+- notes: |-
+    SELECT
+      max(id),
+      max(distinct id)
+    FROM notes
+- users: |-
+    SELECT
+      max(age),
+      max(distinct age)
+    FROM users
+
+min(value):
+- addresses: |-
+    SELECT
+      min(home.postal_code),
+      min(distinct home.postal_code)
+    FROM addresses
+- drafts_changes: |-
+    SELECT
+      min(note_id),
+      min(distinct note_id)
+    FROM drafts_changes
+- notes: |-
+    SELECT
+      min(id),
+      min(distinct id)
+    FROM notes
+- users: |-
+    SELECT
+      min(age),
+      min(distinct age)
+    FROM users
+
+avg(value):
+- addresses: |-
+    SELECT
+      avg(home.postal_code), avg_noise(home.postal_code),
+      avg(distinct home.postal_code), avg_noise(distinct home.postal_code)
+    FROM addresses
+- drafts_changes: |-
+    SELECT
+      avg(note_id), avg_noise(note_id),
+      avg(distinct note_id), avg_noise(distinct note_id)
+    FROM drafts_changes
+- notes: |-
+    SELECT
+      avg(id), avg_noise(id),
+      avg(distinct id), avg_noise(distinct id)
+    FROM notes
+- users: |-
+    SELECT
+      avg(age), avg_noise(age),
+      avg(distinct age), avg_noise(distinct age)
+    FROM users
+
+median(value):
+- addresses: |-
+    SELECT
+      median(home.postal_code),
+      median(distinct home.postal_code)
+    FROM addresses
+- drafts_changes: |-
+    SELECT
+      median(note_id),
+      median(distinct note_id)
+    FROM drafts_changes
+- notes: |-
+    SELECT
+      median(id),
+      median(distinct id)
+    FROM notes
+- users: |-
+    SELECT
+      median(age),
+      median(distinct age)
+    FROM users
+
+stddev(value):
+- addresses: |-
+    SELECT
+      stddev(home.postal_code), stddev_noise(home.postal_code),
+      stddev(distinct home.postal_code), stddev_noise(distinct home.postal_code)
+    FROM addresses
+- drafts_changes: |-
+    SELECT
+      stddev(note_id), stddev_noise(note_id),
+      stddev(distinct note_id), stddev_noise(distinct note_id)
+    FROM drafts_changes
+- notes: |-
+    SELECT
+      stddev(id), stddev_noise(id),
+      stddev(distinct id), stddev_noise(distinct id)
+    FROM notes
+- users: |-
+    SELECT
+      stddev(age), stddev_noise(age),
+      stddev(distinct age), stddev_noise(distinct age)
+    FROM users

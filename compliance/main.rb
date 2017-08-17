@@ -2,6 +2,7 @@
 
 require '../common/query_runner.rb'
 require 'json'
+require 'yaml'
 require 'cgi'
 require 'net/smtp'
 
@@ -15,19 +16,27 @@ require 'net/smtp'
 def check_query(query, air, api_token, datasources)
   partitions = query_datasources(air, api_token, datasources, query, 30)
     .group_by {|result| result["rows"]}
-  if partitions.length == 1 then
+
+  # Prep data in case of error
+  partition_data = partitions.map do |result, values|
+    {
+      result: result,
+      datasources: values.map {|value| value["datasource"]}
+    }
+  end
+  error_result = {
+    success: false,
+    partitions: partition_data
+  }
+
+  if partitions.any? {|result, _values| result == []} then
+    puts "ERROR: Query failed: Empty result set"
+    error_result
+  elsif partitions.length == 1 then
     {success: true}
   else
-    partitions = partitions.map do |result, values|
-      {
-        result: result,
-        datasources: values.map {|value| value["datasource"]}
-      }
-    end
-    {
-      success: false,
-      partitions: partitions
-    }
+    puts "ERROR: Query failed: Difference amongst data source"
+    error_result
   end
 end
 
@@ -98,16 +107,25 @@ datasources = config["datasources"]
 
 errors = []
 
-Dir["#{root_path}/queries/*.sql"].each do |query_file_path|
-  query = File.read(query_file_path)
-  result = check_query(query, air, api_token, datasources)
-  unless result[:success] then
-    errors << {
-      query: query,
-      partitions: result[:partitions],
-      name: query_file_path.split("/").last,
-      path_segment: query_file_path[1...query_file_path.length]
-    }
+Dir["#{root_path}/queries/*.yml"].each do |query_file_path|
+  YAML.load_file(query_file_path).each_pair do |title, queries|
+    queries.each do |query|
+      query.keys.each do |key|
+        sql = query[key]
+
+        puts "Executing #{title} - #{key}"
+
+        result = check_query(sql, air, api_token, datasources)
+        unless result[:success] then
+          errors << {
+            query: sql,
+            partitions: result[:partitions],
+            name: "#{title} - #{key} @ #{query_file_path.split("/").last}",
+            path_segment: query_file_path[1...query_file_path.length]
+          }
+        end
+      end
+    end
   end
 end
 
@@ -115,7 +133,9 @@ errors.each do |error|
   puts error[:query]
   puts "Query failed (produced #{error[:partitions].length} different results):"
   error[:partitions].each_with_index do |partition, i|
-    puts "Partition #{i + 1}:\nData sources: #{partition[:datasources]}\nResult: #{partition[:result]}\n\n"
+    puts "Partition #{i + 1}:"
+    puts "Data sources: #{partition[:datasources]}"
+    puts "Result: #{partition[:result]}\n\n"
   end
   puts ""
 end
