@@ -34,7 +34,7 @@ LOG="./logs/`date +%F.log`"
 ./backend/main.rb 2>&1 | tee -a "$LOG"
 
 # execute compliance tests
-./compliance//main.rb 2>&1 | tee -a "$LOG"
+./compliance/main.rb 2>&1 | tee -a "$LOG"
 
 # execute browser tests
 ./frontend/run.sh
