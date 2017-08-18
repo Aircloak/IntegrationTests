@@ -169,7 +169,7 @@
         "datasources": ["nyctaxi"],
         "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 and trip_time_in_secs < 5000 AND passenger_count <> 4",
         "timeout": 900,
-        "expects": [[2719846]]
+        "expects": [[2719714]]
       },
       {
         "datasources": ["nyctaxi"],
