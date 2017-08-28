@@ -157,7 +157,7 @@
         "datasources": ["nyctaxi"],
         "query": "SELECT passenger_count AS pc, COUNT(*) FROM trips WHERE passenger_count IN (7,8,9,10) GROUP BY pc ORDER BY pc",
         "timeout": 30,
-        "expects": [[7, 26], [8, 19], [9, 16]]
+        "expects": [[7, 26], [8, 17], [9, 17]]
       },
       {
         "datasources": ["nyctaxi"],
