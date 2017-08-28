@@ -27,19 +27,19 @@
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT bucket(year2016.salary - year2015.salary by 100) as diff, count(*) FROM (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2016-01-01' and buchungsDatum < '2017-01-01' and    buchungstext ilike '%lohn%'  GROUP BY inhaberId) year2016 INNER JOIN (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2015-01-01' and buchungsDatum < '2016-01-01' and  buchungstext ilike '%lohn%' GROUP BY inhaberId) year2015 ON year2016.inhaberId = year2015.inhaberId GROUP BY diff",
         "timeout": 30,
-        "expects": [[15700, 6], [36100, 20]]
+        "expects": [[15700.0, 5], [36100.0, 23]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT year(buchungsDatum) as year, month(buchungsDatum) as month, AVG(betrag), STDDEV(betrag), MEDIAN(betrag) FROM umsatz WHERE buchungstext ILIKE '%lohn%' GROUP BY year, month HAVING avg(betrag) > 4000 ORDER BY year DESC, month DESC",
         "timeout": 30,
-        "expects": [[2016, 5, 4403.776, 1330.731, 5250.0], [2016, 2, 5141.918, 648.118, 5250.0]]
+        "expects": [[2016, 5, 4396.843, 1329.602, 5250.0], [2016, 2, 5141.882, 655.49, 5250.0]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT EXTRACT_MATCHES(concat(concat(verwendungszweck, ' '), buchungstext), '\\w{4,}') as word, count(*) FROM umsatz WHERE verwendungszweck ILIKE '%zahlung%' GROUP BY word HAVING count(*) > 100 ORDER BY count(*) DESC LIMIT 10",
         "timeout": 30,
-        "expects": [["477771", 128], ["Zahlung", 128]]
+        "expects": [["477771", 132], ["Zahlung", 132]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
@@ -81,7 +81,7 @@
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT min(pos_betrag) FROM (SELECT inhaberId, verwendungszweck, abs(betrag) as pos_betrag FROM umsatz WHERE betrag >= -100000 and betrag < 0) as umsatz INNER JOIN (  SELECT inhaberId, bankname FROM bankzugang GROUP BY inhaberId, bankname) bankzugang ON bankzugang.inhaberId = umsatz.inhaberId WHERE bankname ilike '%Deutsche Kreditbank Berlin%'",
         "timeout": 30,
-        "expects": [[0]]
+        "expects": [[2.8]]
       }
     ],
     "games and players": [
