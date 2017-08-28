@@ -93,7 +93,7 @@ pow:
     ORDER BY 1, 2
 - sub-query: |-
     SELECT val, val2 FROM (
-      SELECT age ^ 20 as val, pow(age, 20)
+      SELECT age ^ 20 as val, pow(age, 20) as val2
       FROM users
     ) as users
     GROUP BY 1, 2
@@ -145,8 +145,8 @@ ceil:
         ceiling(height) as val2
       FROM users
     ) as users
-    GROUP BY 1
-    ORDER BY 1
+    GROUP BY 1, 2
+    ORDER BY 1, 2
 
 date_trunc:
 - year: |-
@@ -468,15 +468,15 @@ trim:
     GROUP BY 1
     ORDER BY 1
 
-trunc.:
+trunc:
 - top-level: |-
-    SELECT bucket(trunc.(height) by 10)
+    SELECT bucket(trunc(height) by 10)
     FROM users
     GROUP BY 1
     ORDER BY 1
 - sub-query: |-
     SELECT bucket(val by 10) FROM (
-      SELECT trunc.(height) as val
+      SELECT trunc(height) as val
       FROM users
     ) as users
     GROUP BY 1
