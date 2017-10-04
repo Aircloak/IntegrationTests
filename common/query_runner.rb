@@ -41,6 +41,10 @@ def execute_query(url, api_token, datasource, statement, timeout)
   results.first["rows"]
 end
 
+def blank?(object)
+  object.nil? || object.empty?
+end
+
 def query_datasources(url, api_token, datasources, statement, timeout)
   start_time = Time.now
   print "."
@@ -69,7 +73,8 @@ def query_datasources(url, api_token, datasources, statement, timeout)
       if response["completed"] then
         completed_queries << {
           "rows" => response["rows"],
-          "datasource" => query[:datasource]
+          "datasource" => query[:datasource],
+          "error" => response["error"]
         }
         true
       else
@@ -81,9 +86,7 @@ def query_datasources(url, api_token, datasources, statement, timeout)
   end until query_ids == [] or duration > timeout
 
   if duration > timeout then raise "Query timeout (duration exceeded #{timeout} seconds)" end
-  if completed_queries.any?{|query| query["error"]} then raise query["error"] end
-  # Note: This log line is used by the perf.rb script to extract timing information.
-  # If you modify it, you must update the parsing code in that file also.
+  completed_queries.each{|query| if not blank?(query["error"]) then raise query["error"] end}
   puts(" completed in #{duration} seconds.")
 
   completed_queries.map do |query|
