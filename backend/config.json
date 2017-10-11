@@ -7,15 +7,9 @@
     "teambank": [
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
-        "query": "SELECT EXTRACT_MATCHES(verwendungszweck, '\\w+') as word, count(*) FROM umsatz GROUP BY word HAVING count(*) > 1000 ORDER BY count(*) DESC",
+        "query": "SELECT EXTRACT_WORDS(verwendungszweck) as word, count(*) FROM umsatz GROUP BY word HAVING count(*) > 1000 ORDER BY count(*) DESC",
         "timeout": 30,
-        "expects": [["Ec", 1712]]
-      },
-      {
-        "datasources": ["teambank_mongo32", "teambank_mongo34"],
-        "query": "SELECT left(cast(buchungsDatum as text), 7) as month, extract_match(buchungstext, 'EC|Visa|Maestro|Master') as card, count(*) FROM umsatz GROUP BY month, card HAVING count(*) > 1024",
-        "timeout": 30,
-        "expects": [["2016-03", null, 1069]]
+        "expects": [["Ec", 1578]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
@@ -37,9 +31,9 @@
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
-        "query": "SELECT EXTRACT_MATCHES(concat(concat(verwendungszweck, ' '), buchungstext), '\\w{4,}') as word, count(*) FROM umsatz WHERE verwendungszweck ILIKE '%zahlung%' GROUP BY word HAVING count(*) > 100 ORDER BY count(*) DESC LIMIT 10",
+        "query": "SELECT length(EXTRACT_WORDS(concat(concat(verwendungszweck, ' '), buchungstext))) as word_lengths, count(*) FROM umsatz WHERE verwendungszweck ILIKE '%zahlung%' GROUP BY word_lengths HAVING count(*) > 100 ORDER BY count(*) DESC LIMIT 10",
         "timeout": 30,
-        "expects": [["477771", 141], ["Zahlung", 141]]
+        "expects": [[3, 296], [2, 284], [10, 148], [6, 141]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
@@ -49,33 +43,15 @@
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
-        "query": "SELECT extract_match(verwendungszweck, 'Aldi|Edeka|Rewe|IKEA|Amazon') as shop, bucket(income by 200 align middle) as income_class, count(*) FROM (SELECT inhaberId, median(monthly_income) as income FROM (SELECT inhaberId, left(cast(buchungsDatum as text), 7) as year_month, sum(betrag) as monthly_income FROM umsatz WHERE betrag >= 0 and betrag < 1000000000 GROUP BY inhaberId, year_month) as income_by_month GROUP BY inhaberId) customer_incomes INNER JOIN umsatz ON umsatz.inhaberId = customer_incomes.inhaberId GROUP BY income_class, shop HAVING count(*) > 3000 ORDER BY shop ASC, income_class ASC",
-        "timeout": 30,
-        "expects": [[null, 2500, 4265]]
-      },
-      {
-        "datasources": ["teambank_mongo32", "teambank_mongo34"],
-        "query": "SELECT left(cast(buchungsDatum as text), 7) as month, extract_match(verwendungszweck, 'Aldi|Edeka|Rewe|Amazon|IKEA') as shop, avg(betrag), min(betrag), max(betrag), count(*) FROM umsatz GROUP BY month, shop HAVING avg(betrag) > 400 ORDER BY month desc, shop asc",
-        "timeout": 30,
-        "expects": [["2016-05", null, 463.383, -753.2, 5250.0, 371], ["2016-02", null, 651.419, -1200.0, 5250.0, 1465]]
-      },
-      {
-        "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT bucket(income by 200 align middle) as income_class, count(*) FROM (SELECT inhaberId, median(monthly_income) as income FROM (SELECT inhaberId, left(cast(buchungsDatum as text), 7) as year_month, sum(betrag) as monthly_income FROM umsatz WHERE betrag >= 0 and betrag < 1000000000 GROUP BY inhaberId, year_month) as income_by_month GROUP BY inhaberId) as user_incomes GROUP BY income_class",
         "timeout": 30,
         "expects": [["*", 8], [300.0, 13], [2500.0, 29]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
-        "query": "SELECT extract_match(verwendungszweck, 'aldi|rewe|edeka|lidl') as shop, count(*) FROM (SELECT inhaberId FROM bankzugang WHERE bankname = 'figo Demobank' GROUP BY inhaberId) fake_users INNER JOIN umsatz ON fake_users.inhaberId = umsatz.inhaberId GROUP BY shop ORDER BY count(*) DESC",
+        "query": "SELECT EXTRACT_WORDS(w1), count(*) AS count FROM (SELECT inhaberId, verwendungszweck as w1 FROM umsatz) as umsatz INNER JOIN bankzugang ON umsatz.inhaberId = bankzugang.inhaberId GROUP BY 1 HAVING count BETWEEN 600 AND 800 ORDER BY count",
         "timeout": 30,
-        "expects": [[null, 5519], ["Aldi", 319]]
-      },
-      {
-        "datasources": ["teambank_mongo32", "teambank_mongo34"],
-        "query": "SELECT EXTRACT_MATCHES(w1, '\\w+'), count(*) AS count FROM (SELECT inhaberId, verwendungszweck as w1 FROM umsatz) as umsatz INNER JOIN bankzugang ON umsatz.inhaberId = bankzugang.inhaberId GROUP BY 1 HAVING count BETWEEN 500 AND 600 ORDER BY count",
-        "timeout": 30,
-        "expects": [["11", 512], ["End", 521], ["Miete", 596]]
+        "expects": [["Miete", 673], ["Sparen", 726]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
