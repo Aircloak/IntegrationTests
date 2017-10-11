@@ -26,15 +26,6 @@ If errors are encountered, a notification email is sent to the address specified
 __NOTE__: Because of the way queries are executed (polling is used to wait for a query to complete),
 timing information is accurate only within 1% of the test timeout value or 2 seconds, whichever is greater.
 
-### Compliance tests
-
-We have a [compliance
-test dataset](https://github.com/Aircloak/aircloak/blob/master/cloak/datagen/compliance_data_generator.rb)
-that is inserted into each datasource we support and available for querying. The set of queries in the
-compliance query list is executed against all datasources to ensure they all emit the same answer.
-
-Queries should be added to test all aspects of our query system.
-
 ### Frontend tests
 
 The tests driving the system through the frontend are contained in the `/frontend` directory. The deployed version can
