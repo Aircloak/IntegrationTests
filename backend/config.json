@@ -15,7 +15,7 @@
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT institution, bucket(income by 200 align middle) as income_class, count(*) FROM (SELECT inhaberId, institution, median(monthly_income) as income FROM (SELECT umsatz.inhaberId, left(cast(buchungsDatum as text), 7) as year_month, left(bic, 4) as institution, sum(betrag) as monthly_income FROM umsatz INNER JOIN bankzugang ON umsatz.inhaberId = bankzugang.inhaberId WHERE betrag >= 0 and betrag < 1000000000 GROUP BY umsatz.inhaberId, year_month, institution) as income_by_month GROUP BY inhaberId, institution) as user_incomes GROUP BY institution, income_class HAVING count(*) > 10 ORDER BY institution, income_class",
         "timeout": 30,
-        "expects": [["FIGO", 2500, 26], ["*", "*", 17]]
+        "expects": [["FIGO", 2500.0, 26]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
