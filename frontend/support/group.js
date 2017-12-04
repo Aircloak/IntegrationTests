@@ -3,9 +3,9 @@ import {randomString} from "./random";
 export const createGroup = () => {
   const name = randomString();
 
-  browser.url("/admin/groups");
+  browser.url("/admin/groups/new");
   browser.setValue("#group_name", name);
-  browser.click("button*=Add group");
+  browser.click("button*=Save group");
   browser.waitUntil(() => browser.getSource().includes("Group created"));
 
   return {name};

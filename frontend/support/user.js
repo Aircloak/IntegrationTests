@@ -6,7 +6,7 @@ export const createUser = () => {
   const email = `some.email+${name}@aircloak.com`;
 
   browser.url("/admin/users");
-  browser.click("*=Add user");
+  browser.click("*=Add a user");
   browser.waitUntil(() => browser.getSource().includes("New user"));
 
   browser.setValue("#user_email", email);

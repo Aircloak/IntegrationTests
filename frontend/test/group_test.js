@@ -13,12 +13,12 @@ describe("managing groups", () => {
     const name = randomString();
 
     browser.url("/admin/groups");
+    browser.click("*=Add a group");
+    browser.waitUntil(() => browser.getSource().includes("New group"));
     browser.setValue("#group_name", name);
-    browser.click("button*=Add group");
+    browser.click("button*=Save group");
 
     browser.waitUntil(() => browser.getSource().includes("Group created"));
-    assert(browser.isExisting(`h2*=Edit ${name}`));
-    browser.url("/admin/groups");
     assert(browser.isExisting(`tr*=${name}`));
   });
 

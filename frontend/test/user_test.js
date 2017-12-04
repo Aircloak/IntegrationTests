@@ -12,7 +12,7 @@ describe("managing users", () => {
     const password = randomString();
 
     browser.url("/admin/users");
-    browser.click("*=Add user");
+    browser.click("*=Add a user");
     browser.waitUntil(() => browser.getSource().includes("New user"));
 
     browser.setValue("#user_email", `some.email+${name}@aircloak.com`);
@@ -29,7 +29,7 @@ describe("managing users", () => {
     const name = randomString();
 
     browser.url("/admin/users");
-    browser.click("*=Add user");
+    browser.click("*=Add a user");
     browser.waitUntil(() => browser.getSource().includes("New user"));
 
     browser.setValue("#user_name", name);
