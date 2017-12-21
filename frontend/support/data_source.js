@@ -12,7 +12,7 @@ export const allowDataSource = (user, dataSourceName) => {
   editGroup(groupName);
   browser.element(`tr*=${user.name}`).click("input[type='checkbox']");
   browser.element(`tr*=${dataSourceName}`).click("input[type='checkbox']");
-  browser.click("button*=Update group");
+  browser.click("button*=Save group");
   browser.waitUntil(() => browser.getSource().includes("Group updated"));
 };
 

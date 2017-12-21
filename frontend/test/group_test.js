@@ -50,7 +50,7 @@ describe("managing groups", () => {
     editGroup(groupName);
     browser.element(`tr*=${userName}`).click("input[type='checkbox']");
     browser.element("tr*=nyctaxi").click("input[type='checkbox']");
-    browser.click("button*=Update group");
+    browser.click("button*=Save group");
     browser.waitUntil(() => browser.getSource().includes("Group updated"));
 
     showDataSource("nyctaxi");
