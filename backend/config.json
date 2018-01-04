@@ -9,53 +9,53 @@
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT EXTRACT_WORDS(verwendungszweck) as word, count(*) FROM umsatz GROUP BY word HAVING count(*) > 1000 ORDER BY count(*) DESC",
         "timeout": 30,
-        "expects": [["Ec", 1578]]
+        "expects": [["Ec", 1448]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT institution, bucket(income by 200 align middle) as income_class, count(*) FROM (SELECT inhaberId, institution, median(monthly_income) as income FROM (SELECT umsatz.inhaberId, left(cast(buchungsDatum as text), 7) as year_month, left(bic, 4) as institution, sum(betrag) as monthly_income FROM umsatz INNER JOIN bankzugang ON umsatz.inhaberId = bankzugang.inhaberId WHERE betrag >= 0 and betrag < 1000000000 GROUP BY umsatz.inhaberId, year_month, institution) as income_by_month GROUP BY inhaberId, institution) as user_incomes GROUP BY institution, income_class HAVING count(*) > 10 ORDER BY institution, income_class",
         "timeout": 30,
-        "expects": [["FIGO", 2500.0, 26]]
+        "expects": [["FIGO", 2500.0, 28], ["*", "*", 11]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
-        "query": "SELECT bucket(year2016.salary - year2015.salary by 100) as diff, count(*) FROM (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2016-01-01' and buchungsDatum < '2017-01-01' and    buchungstext ilike '%lohn%'  GROUP BY inhaberId) year2016 INNER JOIN (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2015-01-01' and buchungsDatum < '2016-01-01' and  buchungstext ilike '%lohn%' GROUP BY inhaberId) year2015 ON year2016.inhaberId = year2015.inhaberId GROUP BY diff",
+        "query": "SELECT bucket(year2016.salary by 100) as s1, bucket(year2015.salary by 100) as s2, count(*) FROM (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2016-01-01' and buchungsDatum < '2017-01-01' and    buchungstext ilike '%lohn%'  GROUP BY inhaberId) year2016 INNER JOIN (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2015-01-01' and buchungsDatum < '2016-01-01' and  buchungstext ilike '%lohn%' GROUP BY inhaberId) year2015 ON year2016.inhaberId = year2015.inhaberId GROUP BY s1, s2",
         "timeout": 30,
-        "expects": [[15700.0, 6], [36100.0, 21]]
+        "expects": [["*", "*", 10], [18000.0, 2300.0, 15], [38400.0, 2300.0, 30]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT year(buchungsDatum) as year, month(buchungsDatum) as month, AVG(betrag), STDDEV(betrag), MEDIAN(betrag) FROM umsatz WHERE buchungstext ILIKE '%lohn%' GROUP BY year, month HAVING avg(betrag) > 4000 ORDER BY year DESC, month DESC",
         "timeout": 30,
-        "expects": [[2016, 5, 4386.496, 1257.827, 5250.0], [2016, 2, 5160.567, 663.698, 5250.0]]
+        "expects": [[2016, 5, 4437.391, 1247.487, 5229.472], [2016, 2, 5150.9, 603.812, 5250.0]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT length(EXTRACT_WORDS(concat(concat(verwendungszweck, ' '), buchungstext))) as word_lengths, count(*) FROM umsatz WHERE verwendungszweck ILIKE '%zahlung%' GROUP BY word_lengths HAVING count(*) > 100 ORDER BY count(*) DESC LIMIT 10",
         "timeout": 30,
-        "expects": [[3, 296], [2, 284], [10, 148], [6, 141]]
+        "expects": [[3, 296], [2, 283], [10, 148], [6, 134]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT bucket(income by 200 align middle) AS income_class, avg(monthly_savings) FROM (SELECT expenses_by_month.inhaberId, median(monthly_income) AS income,  median(monthly_income) + median(monthly_expenses) AS monthly_savings FROM (SELECT   inhaberId, year(buchungsDatum) AS year, month(buchungsDatum) AS month, sum(betrag) AS monthly_income FROM umsatz WHERE betrag >= 0 AND betrag < 1000000000 GROUP BY inhaberId, year, month) AS income_by_month INNER JOIN (SELECT inhaberId, year(buchungsDatum) AS year, month(buchungsDatum) AS month, sum(betrag) AS monthly_expenses FROM umsatz WHERE betrag >= -1000000000 AND betrag < 0 GROUP BY inhaberId, year, month) AS expenses_by_month ON income_by_month.inhaberId = expenses_by_month.inhaberId AND  income_by_month.year = expenses_by_month.year AND income_by_month.month = expenses_by_month.month GROUP BY expenses_by_month.inhaberId) AS customer_incomes GROUP BY income_class",
         "timeout": 30,
-        "expects": [["*", 1074.489], [2500, -1512.29]]
+        "expects": [[2300.0, 481.733], [2500.0, -1122.647]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT bucket(income by 200 align middle) as income_class, count(*) FROM (SELECT inhaberId, median(monthly_income) as income FROM (SELECT inhaberId, left(cast(buchungsDatum as text), 7) as year_month, sum(betrag) as monthly_income FROM umsatz WHERE betrag >= 0 and betrag < 1000000000 GROUP BY inhaberId, year_month) as income_by_month GROUP BY inhaberId) as user_incomes GROUP BY income_class",
         "timeout": 30,
-        "expects": [["*", 8], [300.0, 13], [2500.0, 29]]
+        "expects": [[300.0, 4], [2300.0, 5], [2500.0, 31]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
         "query": "SELECT EXTRACT_WORDS(w1), count(*) AS count FROM (SELECT inhaberId, verwendungszweck as w1 FROM umsatz) as umsatz INNER JOIN bankzugang ON umsatz.inhaberId = bankzugang.inhaberId GROUP BY 1 HAVING count BETWEEN 600 AND 800 ORDER BY count",
         "timeout": 30,
-        "expects": [["Miete", 673], ["Sparen", 726]]
+        "expects": [["Sparen", 662]]
       },
       {
         "datasources": ["teambank_mongo32", "teambank_mongo34"],
-        "query": "SELECT min(pos_betrag) FROM (SELECT inhaberId, verwendungszweck, abs(betrag) as pos_betrag FROM umsatz WHERE betrag >= -100000 and betrag < 0) as umsatz INNER JOIN (  SELECT inhaberId, bankname FROM bankzugang GROUP BY inhaberId, bankname) bankzugang ON bankzugang.inhaberId = umsatz.inhaberId WHERE bankname ilike '%Deutsche Kreditbank Berlin%'",
+        "query": "SELECT min(pos_betrag) FROM (SELECT inhaberId, verwendungszweck, abs(betrag) as pos_betrag FROM umsatz WHERE betrag >= -100000 and betrag < 0) as umsatz INNER JOIN (  SELECT inhaberId, bankname FROM bankzugang GROUP BY inhaberId, bankname) bankzugang ON bankzugang.inhaberId = umsatz.inhaberId WHERE bankname ilike '%bank%'",
         "timeout": 30,
         "expects": [[2.8]]
       }
@@ -69,7 +69,7 @@
         ],
         "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
         "timeout": 30,
-        "expects": [[56, 4], [59, 5], [60, 4], [61, 4], [62, 3], [63, 11], [64, 5], [65, 4], [67, 2], [69, 4], ["*", 23]]
+        "expects": [[55, 4], [56, 3], [61, 5], [63, 4], [65, 11], ["*", 48]]
       },
       {
         "datasources": [
@@ -79,7 +79,7 @@
         ],
         "query": "SELECT SUM(winpoints) FROM players INNER JOIN games ON players.uid = games.player WHERE age > 0 and age < 18",
         "timeout": 30,
-        "expects": [[50269]]
+        "expects": [[52474]]
       },
       {
         "datasources": [
@@ -89,7 +89,7 @@
         ],
         "query": "SELECT AVG(count) FROM (SELECT player, count(*) AS count FROM games GROUP BY player) AS t",
         "timeout": 30,
-        "expects": [[10.514]]
+        "expects": [[10.515]]
       },
       {
         "datasources": [
@@ -109,7 +109,7 @@
         ],
         "query": "SELECT winpoints, COUNT(*) FROM players JOIN games ON players.uid = games.player GROUP BY winpoints HAVING COUNT(*) BETWEEN 100 AND 300 ORDER BY winpoints LIMIT 2",
         "timeout": 30,
-        "expects": [[50, 199], [79, 227]]
+        "expects": [[49, 100], [50, 199]]
       },
       {
         "datasources": [
@@ -127,31 +127,31 @@
         "datasources": ["nyctaxi"],
         "query": "SELECT COUNT(trip_time_in_secs), AVG(trip_time_in_secs), STDDEV(trip_time_in_secs) FROM trips WHERE passenger_count >= 8 and passenger_count < 10",
         "timeout": 30,
-        "expects": [[36, 361.562, 528.115]]
+        "expects": [[38, 447.514, 641.387]]
       },
       {
         "datasources": ["nyctaxi"],
         "query": "SELECT passenger_count AS pc, COUNT(*) FROM trips WHERE passenger_count IN (7,8,9,10) GROUP BY pc ORDER BY pc",
         "timeout": 30,
-        "expects": [[7, 23], [8, 19], [9, 15]]
+        "expects": [[7, 28], [8, 20], [9, 6]]
       },
       {
         "datasources": ["nyctaxi"],
         "query": "SELECT COUNT(DISTINCT passenger_count) FROM trips WHERE trip_time_in_secs > 5000 and trip_time_in_secs < 10000",
         "timeout": 600,
-        "expects": [[8]]
+        "expects": [[2]]
       },
       {
         "datasources": ["nyctaxi"],
         "query": "SELECT COUNT(*) FROM trips WHERE trip_time_in_secs > 2500 and trip_time_in_secs < 5000 AND passenger_count <> 4",
         "timeout": 900,
-        "expects": [[2720811]]
+        "expects": [[2720905]]
       },
       {
         "datasources": ["nyctaxi"],
         "query": "SELECT MIN(passenger_count), MAX(passenger_count), MEDIAN(passenger_count), SUM(passenger_count) FROM trips WHERE trip_time_in_secs >= 0 and trip_time_in_secs < 50",
         "timeout": 900,
-        "expects": [[0, 9, 1, 1343112]]
+        "expects": [[0, 9, 1, 1342909]]
       }
     ],
     "medical database": [
@@ -159,7 +159,7 @@
         "datasources": ["kia_clinic_sqlserver"],
         "query": "SELECT COUNT(*) FROM patients",
         "timeout": 30,
-        "expects": [[11255]]
+        "expects": [[11252]]
       },
       {
         "datasources": ["kia_clinic_sqlserver"],
