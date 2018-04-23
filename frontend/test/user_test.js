@@ -47,7 +47,8 @@ describe("managing users", () => {
     browser.url("/admin/users");
     browser.element(`tr*=${name}`).click("a*=Delete");
     browser.alertAccept();
-    browser.waitUntil(() => browser.getSource().includes("User deleted"));
+    browser.waitUntil(() => browser.getSource().includes("User deletion will be performed in the background"));
+    browser.refresh();
 
     assert.equal(browser.getSource().includes(name), false);
   });
