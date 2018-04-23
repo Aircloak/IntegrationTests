@@ -14,5 +14,12 @@ export const login = (user) => {
   browser.setValue("[name='password']", user.password);
   browser.click("form button");
 
-  browser.waitUntil(() => browser.getSource().includes("Sign out"));
+  browser.waitUntil(() =>
+    browser.getSource().includes("Sign out") || browser.getSource().includes("Accept privacy policy")
+  );
+
+  if (browser.getSource().includes("Accept privacy policy")) {
+    browser.click("#review-box form button");
+    browser.waitUntil(() => browser.getSource().includes("Sign out"));
+  }
 }
