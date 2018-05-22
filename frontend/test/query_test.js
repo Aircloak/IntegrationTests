@@ -1,14 +1,14 @@
 import assert from "assert";
 
 import {loginAdmin, login} from "../support/session";
-import {createUser} from "../support/user";
+import {createUserWithPassword} from "../support/user";
 import {allowDataSource, queryDataSource} from "../support/data_source";
 
 describe("queries", () => {
   before(() => {
     loginAdmin();
 
-    const user = createUser();
+    const user = createUserWithPassword();
     allowDataSource(user, "games");
     allowDataSource(user, "nyctaxi");
 
