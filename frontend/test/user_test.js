@@ -9,7 +9,6 @@ describe("managing users", () => {
 
   it("allows adding a user", () => {
     const name = randomString();
-    const password = randomString();
 
     browser.url("/admin/users");
     browser.click("*=Add a user");
@@ -17,8 +16,6 @@ describe("managing users", () => {
 
     browser.setValue("#user_email", `some.email+${name}@aircloak.com`);
     browser.setValue("#user_name", name);
-    browser.setValue("#user_password", password);
-    browser.setValue("#user_password_confirmation", password);
     browser.click("button*=Save");
 
     browser.waitUntil(() => browser.isExisting(".alert-info*=User created"));
