@@ -44,7 +44,15 @@ exports.config = {
         // 5 instances get started at a time.
         maxInstances: 5,
         //
-        browserName: 'chrome'
+        browserName: 'chrome',
+        chromeOptions: {
+          prefs: {
+            profile: {
+              // Disable images - rendering the big image on the login screen crashes chrome in docker
+              default_content_setting_values: {images: 2},
+            },
+          },
+        },
     }],
     //
     // ===================
