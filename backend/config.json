@@ -21,7 +21,7 @@
         "datasources": ["teambank_mongo34"],
         "query": "SELECT bucket(year2016.salary by 100) as s1, bucket(year2015.salary by 100) as s2, count(*) FROM (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2016-01-01' and buchungsDatum < '2017-01-01' and    buchungstext ilike '%lohn%'  GROUP BY inhaberId) year2016 INNER JOIN (SELECT     inhaberId,    SUM(betrag) as salary  FROM umsatz  WHERE     buchungsDatum >= '2015-01-01' and buchungsDatum < '2016-01-01' and  buchungstext ilike '%lohn%' GROUP BY inhaberId) year2015 ON year2016.inhaberId = year2015.inhaberId GROUP BY s1, s2",
         "timeout": 30,
-        "expects": [[18000.0, 2300.0, 0], [38400.0, 2300.0, 19]]
+        "expects": [[18000.0, 2300.0, 2], [38400.0, 2300.0, 19]]
       },
       {
         "datasources": ["teambank_mongo34"],
@@ -45,7 +45,7 @@
         "datasources": ["teambank_mongo34"],
         "query": "SELECT bucket(income by 200 align middle) as income_class, count(*) FROM (SELECT inhaberId, median(monthly_income) as income FROM (SELECT inhaberId, left(cast(buchungsDatum as text), 7) as year_month, sum(betrag) as monthly_income FROM umsatz WHERE betrag >= 0 and betrag < 1000000000 GROUP BY inhaberId, year_month) as income_by_month GROUP BY inhaberId) as user_incomes GROUP BY income_class",
         "timeout": 30,
-        "expects": [["*", 2], [300.0, 14], [2300.0, 0], [2500.0, 23]]
+        "expects": [["*", 2], [300.0, 14], [2300.0, 2], [2500.0, 23]]
       },
       {
         "datasources": ["teambank_mongo34"],
@@ -65,7 +65,7 @@
         "datasources": ["games_and_players"],
         "query": "SELECT winpoints, COUNT(firstname) FROM players JOIN games ON players.uid = games.player WHERE firstname = 'Ryker' GROUP BY winpoints ORDER BY winpoints",
         "timeout": 30,
-        "expects": [[55, 2], [56, 9], [60, 10], [61, 7], [62, 2], [63, 6], [64, 0], [65, 9], [66, 0], [70, 0], ["*", 5]]
+        "expects": [[55, 2], [56, 9], [60, 10], [61, 7], [62, 2], [63, 6], [64, 2], [65, 9], [66, 2], [70, 2], ["*", 5]]
       },
       {
         "datasources": ["games_and_players"],
