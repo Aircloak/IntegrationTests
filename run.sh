@@ -24,8 +24,8 @@ if ! (cd aircloak && git pull && ./publish.sh browser_test 2>&1 | tee "../logs/d
   exit
 fi
 
-echo "Deploy complete! Waiting 90 seconds for airs/cloaks to stabilise ..."
-sleep 90
+echo "Deploy complete! Waiting 2 hours for the cloak to do column discovery ..."
+sleep 2h
 
 export http_proxy=""
 LOG="./logs/`date +%F.log`"
