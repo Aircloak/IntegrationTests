@@ -42,11 +42,23 @@ describe("managing users", () => {
     const {name} = createUser();
 
     browser.url("/admin/users");
-    browser.element(`tr*=${name}`).click("a*=Delete");
+    browser.element(`tr*=${name}`).click("a*=Permanently delete");
     browser.alertAccept();
-    browser.waitUntil(() => browser.getSource().includes("User deletion will be performed in the background"));
+    browser.waitUntil(() => browser.getSource().includes("The deletion will be performed in the background"));
     browser.refresh();
 
     assert.equal(browser.getSource().includes(name), false);
+  });
+
+  it("allows disabling and enabling a user", () => {
+    const {name} = createUser();
+    const matchString = "Disabled user accounts";
+
+    browser.url("/admin/users");
+    browser.element(`tr*=${name}`).click("a*=Disable");
+    browser.waitUntil(() => browser.getSource().includes(matchString));
+
+    browser.element(`tr*=${name}`).click("a*=Enable");
+    assert.equal(browser.getSource().includes(matchString), false);
   });
 });
