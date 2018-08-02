@@ -55,15 +55,10 @@ describe("managing users", () => {
     const matchString = "Disabled user accounts";
 
     browser.url("/admin/users");
-    assert.equal(browser.getSource().includes(matchString), false);
-
     browser.element(`tr*=${name}`).click("a*=Disable");
     browser.waitUntil(() => browser.getSource().includes(matchString));
-    assert.equal(browser.getSource().includes(matchString), true);
-    browser.refresh();
 
     browser.element(`tr*=${name}`).click("a*=Enable");
-    browser.refresh();
     assert.equal(browser.getSource().includes(matchString), false);
   });
 });
