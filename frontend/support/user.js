@@ -3,23 +3,23 @@ import {logout, loginAdmin} from "./session";
 
 export const createUser = () => {
   const name = randomString();
-  const email = `some.email+${name}@aircloak.com`;
+  const login = `some.email+${name}@aircloak.com`;
 
   browser.url("/admin/users");
   browser.click("*=Add a user");
   browser.waitUntil(() => browser.getSource().includes("New user"));
 
-  browser.setValue("#user_email", email);
+  browser.setValue("#user_login", login);
   browser.setValue("#user_name", name);
   browser.click("button*=Save");
 
   browser.waitUntil(() => browser.isExisting(".alert-info*=User created"));
 
-  return {name, email};
+  return {name, login};
 }
 
 export const createUserWithPassword = () => {
-  const {name, email} = createUser();
+  const {name, login} = createUser();
 
   const resetLink = browser.element("#reset-link").getText();
   logout();
@@ -31,5 +31,5 @@ export const createUserWithPassword = () => {
   browser.click("button*=Save");
   loginAdmin();
 
-  return {name, email, password};
+  return {name, login, password};
 }
