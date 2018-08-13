@@ -14,7 +14,7 @@ export const login = (user) => {
   browser.setValue("[name='password']", user.password);
   browser.click("form button");
 
-  browser.waitUntil(isLoggedIn());
+  browser.waitUntil(isLoggedIn);
 }
 
 const isLoggedIn = () =>
