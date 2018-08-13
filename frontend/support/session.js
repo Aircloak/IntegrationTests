@@ -10,7 +10,7 @@ export const login = (user) => {
   logout();
 
   browser.url("/auth");
-  browser.setValue("[name='email']", user.email);
+  browser.setValue("[name='login']", user.login);
   browser.setValue("[name='password']", user.password);
   browser.click("form button");
 

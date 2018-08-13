@@ -14,7 +14,7 @@ describe("managing users", () => {
     browser.click("*=Add a user");
     browser.waitUntil(() => browser.getSource().includes("New user"));
 
-    browser.setValue("#user_email", `some.email+${name}@aircloak.com`);
+    browser.setValue("#user_login", `some.login+${name}@aircloak.com`);
     browser.setValue("#user_name", name);
     browser.click("button*=Save");
 
