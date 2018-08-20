@@ -10,7 +10,7 @@ describe("login", () => {
     browser.setValue("[name='password']", "1234");
     browser.click("form button");
 
-    browser.waitUntil(() => browser.getSource().includes("Invalid e-mail or password."));
+    browser.waitUntil(() => browser.getSource().includes("Invalid login or password."));
     assert(browser.getUrl().endsWith("/auth"));
   });
 
