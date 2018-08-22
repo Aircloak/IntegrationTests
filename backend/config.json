@@ -143,13 +143,39 @@
         "timeout": 30,
         "expects": []
       }
+    ],
+    "drill": [
+      {
+        "datasources": ["drill_logs"],
+        "query": "SELECT device, COUNT(*) FROM logs WHERE device LIKE 'IOS%' GROUP BY 1 ORDER BY 1",
+        "timeout": 30,
+        "expects": [["IOS5", 27371], ["IOS6", 3209], ["IOS7", 3007]]
+      },
+      {
+        "datasources": ["drill_logs"],
+        "query": "SELECT COUNT(*) FROM (SELECT DISTINCT state FROM logs WHERE dir0 = '2012' AND dir1 = '10') AS t",
+        "timeout": 30,
+        "expects": [[41]]
+      },
+      {
+        "datasources": ["drill_views"],
+        "query": "SELECT category, COUNT(*) FROM products GROUP BY 1 ORDER BY 2 DESC LIMIT 3",
+        "timeout": 30,
+        "expects": [["Office Furnishings", 130], ["Binders and Binder Accessories", 128], ["Pens & Art Supplies", 101]]
+      },
+      {
+        "datasources": ["drill_views"],
+        "query": "SELECT AVG(max) FROM (SELECT MAX(price) AS max, STDDEV(price) AS stddev FROM products GROUP BY name HAVING stddev > 5 ORDER BY max DESC) AS t",
+        "timeout": 30,
+        "expects": [[163.33]]
+      }
     ]
   },
   "cloaks": [
     {
       "url": "nightly-air.aircloak.com",
       "token": "SFMyNTY.g3QAAAACZAAEZGF0YW0AAAAkNGFiMDc5YTctYjM1ZS00NDgyLWFlZjAtNzRhMmY2ZTM3MmZlZAAGc2lnbmVkbgYAab6qmVcB.T_j5M5Kix3k2wLo8qefhC9EcqQ0UEddkjbpOpvD5zY0",
-      "tests": ["teambank", "games and players", "nyctaxi", "medical database"],
+      "tests": ["drill", "teambank", "games and players", "nyctaxi", "medical database"],
       "load_testing": {
         "datasource": "nyctaxi",
         "queries": [
