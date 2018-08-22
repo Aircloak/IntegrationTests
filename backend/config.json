@@ -142,6 +142,12 @@
         "query": "SELECT firstname FROM patients WHERE firstname = 'abc \\''~!@#{$1%^&1*(){}[]_+-=?/\\<>\b\",.:;\t 123'",
         "timeout": 30,
         "expects": []
+      },
+      {
+        "datasources": ["kia_clinic_sqlserver"],
+        "query": "SELECT DISTINCT status FROM (SELECT status, patient_id FROM pt_appointments WHERE duration BETWEEN '00:00:00' AND '00:30:00' GROUP BY 1, 2 ORDER BY COUNT(*) LIMIT 10) AS t",
+        "timeout": 30,
+        "expects": [[4]]
       }
     ],
     "drill": [
