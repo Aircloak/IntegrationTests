@@ -39,7 +39,7 @@
         "datasources": ["teambank_mongo34"],
         "query": "SELECT bucket(income by 200 align middle) AS income_class, avg(monthly_savings) FROM (SELECT expenses_by_month.inhaberId, median(monthly_income) AS income,  median(monthly_income) + median(monthly_expenses) AS monthly_savings FROM (SELECT   inhaberId, year(buchungsDatum) AS year, month(buchungsDatum) AS month, sum(betrag) AS monthly_income FROM umsatz WHERE betrag >= 0 AND betrag < 1000000000 GROUP BY inhaberId, year, month) AS income_by_month INNER JOIN (SELECT inhaberId, year(buchungsDatum) AS year, month(buchungsDatum) AS month, sum(betrag) AS monthly_expenses FROM umsatz WHERE betrag >= -1000000000 AND betrag < 0 GROUP BY inhaberId, year, month) AS expenses_by_month ON income_by_month.inhaberId = expenses_by_month.inhaberId AND  income_by_month.year = expenses_by_month.year AND income_by_month.month = expenses_by_month.month GROUP BY expenses_by_month.inhaberId) AS customer_incomes GROUP BY income_class",
         "timeout": 30,
-        "expects": [["*", -404.315], [2300.0, -499.36], [2500.0, -1251.565]]
+        "expects": [["*", 1376.59], [2300.0, -925.985], [2500.0, -1253.807]]
       },
       {
         "datasources": ["teambank_mongo34"],
