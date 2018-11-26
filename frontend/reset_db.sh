@@ -15,6 +15,6 @@ psql -h $HOST -p $PORT -U $USER $NAME << EOF
   DELETE FROM GROUPS_USERS WHERE group_id NOT IN (
     SELECT id FROM GROUPS WHERE name = 'Admin');
   DELETE FROM DATA_SOURCES_GROUPS;
-  DELETE FROM USERS WHERE login <> 'admin@aircloak.com';
+  DELETE FROM USERS WHERE id IN (SELECT user_id FROM logins WHERE login <> 'admin@aircloak.com');
   DELETE FROM GROUPS WHERE name <> 'Admin';
 EOF
