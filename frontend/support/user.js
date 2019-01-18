@@ -21,6 +21,8 @@ export const createUser = () => {
 export const createUserWithPassword = () => {
   const {name, login} = createUser();
 
+  browser.click("a*=Reset password");
+  browser.waitUntil(() => browser.isExisting(".alert-info*=The user can set a new password using the following link"));
   const resetLink = browser.element("#reset-link").getText();
   logout();
 
