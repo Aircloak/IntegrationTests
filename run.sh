@@ -32,6 +32,3 @@ LOG="./logs/`date +%F.log`"
 
 # execute backend system tests
 ./backend/main.rb 2>&1 | tee -a "$LOG"
-
-# execute browser tests
-./frontend/run.sh
